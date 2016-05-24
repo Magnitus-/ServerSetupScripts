@@ -16,7 +16,9 @@ apt-get update;
 apt-get purge lxc-docker;
 apt-get install -y linux-image-extra-$(uname -r);
 apt-get install -y docker-engine;
-service docker start;
+systemctl start docker;
+systemctl enable docker;
+
 
 #Installing docker-compose
 apt-get install -y curl;
