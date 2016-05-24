@@ -1,6 +1,11 @@
 #!/bin/bash
 #Adapted directly from the official installation instructions
 
+if [ "$(whoami)" != "root" ]; then
+    echo "This script requires root privileges";
+    exit 1;
+fi
+
 #Installing docker-engine
 apt-get update;
 apt-get install -y apt-transport-https ca-certificates;
@@ -12,7 +17,7 @@ apt-get purge lxc-docker;
 apt-get install -y linux-image-extra-$(uname -r);
 apt-get install -y apparmor;
 apt-get install -y docker-engine;
-sudo service docker start;
+service docker start;
 
 #Installing docker-compose
 apt-get install -y curl;
