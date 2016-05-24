@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ "$(whoami)" != "root" ]; then
     echo "This script requires root privileges";
     exit 1;
