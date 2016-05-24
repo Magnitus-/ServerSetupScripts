@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ -z "$1" ]
+  then
+    echo "Username of new user is required as an argument";
+    exit 1;
+fi
 if [ "$(whoami)" != "root" ]; then
     echo "This script requires root privileges";
     exit 1;
