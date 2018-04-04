@@ -32,7 +32,6 @@ resource "aws_key_pair" "test_server" {
 }
 
 resource "aws_instance" "test_server" {
-  #Assumes us-east region
   ami           = "${data.aws_ami.debian.id}"
   instance_type = "t2.small"
   key_name = "test-server-key"
