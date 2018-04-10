@@ -1,0 +1,5 @@
+---
+
+- script: install_docker.sh
+
+- shell: gpasswd -a {{ user }} docker
