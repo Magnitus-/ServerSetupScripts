@@ -61,3 +61,18 @@ resource "aws_instance" "test_server" {
   key_name = "test-server-key"
   security_groups = ["${aws_security_group.test_server.name}"]
 }
+
+resource "null_resource" "inventory" {
+  triggers {
+    test_server_id = "${join(",", aws_instance.test_server.*.id)}"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '[test_server]\n${aws_instance.test_server.public_ip}' > inventory"
+  }
+
+  provisioner "local-exec" {
+    command = "rm inventory || true"
+    when = "destroy"
+  }
+}
