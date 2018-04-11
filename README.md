@@ -41,3 +41,13 @@ From the top-level directory, type:
 ```
 ansible-playbook test-playbooks/install_docker.yml --private-key=test-environment/key -u admin -i test-environment/inventory
 ```
+
+### Python python-packages
+
+The latest version of the **pip** tool and the **docker** package (version 3.2.1 by default) will be installed.
+
+From the top-level directory, type:
+
+```
+ansible-playbook test-playbooks/install_python_packages.yml --private-key=test-environment/key -u admin -i test-environment/inventory
+```
