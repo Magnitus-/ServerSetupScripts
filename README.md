@@ -51,3 +51,13 @@ From the top-level directory, type:
 ```
 ansible-playbook test-playbooks/install_python_packages.yml --private-key=test-environment/key -u admin -i test-environment/inventory
 ```
+
+### kubeadm
+
+kubeadm, kubelet and kubectl will be installed.
+
+From the top-level directory, type:
+
+```
+ansible-playbook test-playbooks/install_kubeadm.yml --private-key=test-environment/key -u admin -i test-environment/inventory
+```

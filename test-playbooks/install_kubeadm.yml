@@ -1,0 +1,6 @@
+---
+
+- name: Install kubeadm, kubelet and kubectl
+  hosts: test_server
+  roles:
+  - { role: ../roles/kubeadm, become: true, user: admin }
