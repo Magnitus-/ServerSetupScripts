@@ -54,10 +54,20 @@ ansible-playbook test-playbooks/install_python_packages.yml --private-key=test-e
 
 ### kubeadm
 
-kubeadm, kubelet and kubectl will be installed.
+kubeadm, kubelet and kubectl will be installed. Note that docker is expected to already be installed on the host.
 
 From the top-level directory, type:
 
 ```
 ansible-playbook test-playbooks/install_kubeadm.yml --private-key=test-environment/key -u admin -i test-environment/inventory
+```
+
+### k8 master
+
+Initialize a k8 master using flannel as the network driver. Note that both docker and kubeadm are expected to already be installed on the host.
+
+From the top-level directory, type:
+
+```
+ansible-playbook test-playbooks/install_k8_master.yml --private-key=test-environment/key -u admin -i test-environment/inventory
 ```
