@@ -88,7 +88,7 @@ ansible-playbook test-playbooks/install_k8_master.yml --private-key=test-server/
 
 ### k8 cluster
 
-Creates a cluster of one k8 master and two k8 workers using the existing playbooks.
+Creates a cluster of one k8 master and k8 workers using the existing playbooks.
 
 From the top-level directory, type:
 
