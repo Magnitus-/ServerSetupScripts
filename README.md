@@ -40,11 +40,11 @@ From there, in the **test-environment** directory, type:
 ssh -i key admin@<ip of the host>
 ```
 
-### cluster
+### Cluster
 
 Similar to the single server, but under the ```test-cluster``` directory. Also note that the **inventory** file will contain a list of several machines and you can ssh into any one of them.
 
-## Test Ansible roles
+## Test Ansible Roles
 
 ### Docker
 
@@ -54,7 +54,7 @@ From the top-level directory, type:
 ansible-playbook test-playbooks/install_docker.yml --private-key=test-server/key -u admin -i test-server/inventory
 ```
 
-### Python python-packages
+### python-packages
 
 The latest version of the **pip** tool and the **docker** package (version 3.2.1 by default) will be installed.
 
@@ -82,4 +82,16 @@ From the top-level directory, type:
 
 ```
 ansible-playbook test-playbooks/install_k8_master.yml --private-key=test-server/key -u admin -i test-server/inventory
+```
+
+## Test Ansible Playbooks
+
+### k8 cluster
+
+Creates a cluster of one k8 master and two k8 workers using the existing playbooks.
+
+From the top-level directory, type:
+
+```
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster.yml --private-key=test-cluster/key -u admin -i test-cluster/inventory
 ```

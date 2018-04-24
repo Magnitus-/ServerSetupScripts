@@ -1,0 +1,3 @@
+- name: Apply join command to join master
+  command: "{{ hostvars[groups['masters'][0]]['join_command']['stdout'] }}"
+  become: yes
