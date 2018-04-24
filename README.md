@@ -42,7 +42,7 @@ ssh -i key admin@<ip of the host>
 
 ### cluster
 
-Similar to the single server, but under the ```test-cluster``` directory. Also note that the **inventory** file will content a list of several machines and you can ssh into any one of them.
+Similar to the single server, but under the ```test-cluster``` directory. Also note that the **inventory** file will contain a list of several machines and you can ssh into any one of them.
 
 ## Test Ansible roles
 

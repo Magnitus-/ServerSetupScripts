@@ -76,7 +76,7 @@ resource "aws_security_group" "test_cluster_internal" {
 
 }
 
-resource "aws_instance" "test_pods" {
+resource "aws_instance" "test_workers" {
   ami           = "${data.aws_ami.debian.id}"
   instance_type = "t2.small"
   key_name = "test-cluster-key"
@@ -93,16 +93,16 @@ resource "aws_instance" "test_master" {
 
 resource "null_resource" "inventory" {
   triggers {
-    test_pod_id = "${join(",", aws_instance.test_pods.*.id)}"
+    test_pod_id = "${join(",", aws_instance.test_workers.*.id)}"
     test_master_id = "${join(",", aws_instance.test_master.*.id)}"
   }
 
   provisioner "local-exec" {
-    command = "echo '[test_master]\n${aws_instance.test_master.public_ip}\n\n' > inventory"
+    command = "echo '[masters]\n${aws_instance.test_master.public_ip}\n' > inventory"
   }
 
   provisioner "local-exec" {
-    command = "echo '[test_pods]\n${join("\n", aws_instance.test_pods.*.public_ip)}' >> inventory"
+    command = "echo '[workers]\n${join("\n", aws_instance.test_workers.*.public_ip)}' >> inventory"
   }
 
   provisioner "local-exec" {
