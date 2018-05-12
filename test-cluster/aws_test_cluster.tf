@@ -81,24 +81,25 @@ resource "aws_instance" "test_workers" {
   instance_type = "t2.small"
   key_name = "test-cluster-key"
   security_groups = ["${aws_security_group.test_cluster_ssh.name}", "${aws_security_group.test_cluster_outbound.name}", "${aws_security_group.test_cluster_internal.name}"]
-  count = 2
+  count = "${var.workers_count}"
 }
 
-resource "aws_instance" "test_master" {
+resource "aws_instance" "test_masters" {
   ami           = "${data.aws_ami.debian.id}"
   instance_type = "t2.small"
   key_name = "test-cluster-key"
   security_groups = ["${aws_security_group.test_cluster_ssh.name}", "${aws_security_group.test_cluster_outbound.name}", "${aws_security_group.test_cluster_internal.name}"]
+  count = "${var.masters_count}"
 }
 
 resource "null_resource" "inventory" {
   triggers {
     test_pod_id = "${join(",", aws_instance.test_workers.*.id)}"
-    test_master_id = "${join(",", aws_instance.test_master.*.id)}"
+    test_master_id = "${join(",", aws_instance.test_masters.*.id)}"
   }
 
   provisioner "local-exec" {
-    command = "echo '[masters]\n${aws_instance.test_master.public_ip}\n' > inventory"
+    command = "echo '[masters]\n${join("\n", aws_instance.test_masters.*.public_ip)}\n' > inventory"
   }
 
   provisioner "local-exec" {
