@@ -1,0 +1,30 @@
+---
+
+- name: Install masters' core dependencies
+  hosts: masters
+  roles:
+  - { role: ../roles/docker, become: true, user: admin }
+  - { role: ../roles/kubeadm, become: true, user: admin }
+  - { role: ../roles/cfssl, become: true, user: admin }
+
+- name: Setup etcd credentials on master 0
+  hosts: masters[0]
+  roles:
+  - { role: ../roles/etcd_certificates, become: true, user: admin }
+  - { role: ../roles/get_etcd_certificates, become: true, user: admin }
+
+- name: Setup etcd credentials on other masters
+  hosts: masters[1:]
+  roles:
+  - { role: ../roles/send_etcd_certificates, become: true, user: admin }
+
+- name: Complete masters setup
+  hosts: masters
+  roles:
+  - { role: ../roles/etcd_peer_certificates }
+
+- name: Install Workers
+  hosts: workers
+  roles:
+  - { role: ../roles/docker, become: true, user: admin }
+  - { role: ../roles/kubeadm, become: true, user: admin }

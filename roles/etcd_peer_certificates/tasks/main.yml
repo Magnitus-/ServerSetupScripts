@@ -1,0 +1,5 @@
+- name: Generate the peer certificates
+  script: generate.sh
+  become: yes
+  environment:
+    SELF_IP: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"

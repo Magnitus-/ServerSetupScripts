@@ -1,0 +1,5 @@
+- name: Install cfssl
+  script: install_cfssl.sh
+  become: yes
+  environment:
+    ARCHITECTURE: "{{ architecture }}"
