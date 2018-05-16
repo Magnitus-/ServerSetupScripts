@@ -13,6 +13,7 @@
   - { role: ../roles/etcd_certificates, become: true, user: admin }
   - { role: ../roles/get_etcd_certificates, become: true, user: admin }
 
+
 - name: Setup etcd credentials on other masters
   hosts: masters[1:]
   roles:
@@ -20,8 +21,11 @@
 
 - name: Complete masters setup
   hosts: masters
+  vars:
+    inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
   roles:
-  - { role: ../roles/etcd_peer_certificates }
+  - { role: ../roles/etcd_peer_certificates, become: true, user: admin }
+  - { role: ../roles/etcd, become: true, user: admin }
 
 - name: Install Workers
   hosts: workers

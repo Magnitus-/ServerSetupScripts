@@ -1,0 +1,6 @@
+- name: Start etcd in a pod running on the host
+  script: setup_etcd_pod.sh
+  become: yes
+  environment:
+    MASTER_ID: "{{ inventory_hostname }}"
+    INVENTORY: "{{ inventory_hostnames }}"
