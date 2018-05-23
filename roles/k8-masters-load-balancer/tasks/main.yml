@@ -1,0 +1,13 @@
+- name: Ensure the directory to copy the configs to exists
+  file:
+    path: /opt/haproxy
+    state: directory
+
+- template:
+    src: config.j2
+    dest: /opt/haproxy/haproxy.cfg
+    mode: 0644
+
+- name: Starts haproxy
+  script: setup.sh
+  become: yes

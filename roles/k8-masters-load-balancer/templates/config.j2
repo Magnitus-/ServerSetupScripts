@@ -1,0 +1,12 @@
+backend k8_api_servers
+   balance roundrobin
+	 option tcp-check
+	 tcp-check connect ssl
+   {%- for master_server in master_hostnames.split(' ') %}
+   {{ '\n' }}server master_{{ master_server }} {{ master_server }}:6443
+   {%- endfor %}
+
+frontend k8_api
+  bind *:6443
+  mode tcp
+  default_backend k8_api_servers

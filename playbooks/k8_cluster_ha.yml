@@ -1,4 +1,18 @@
 ---
+- name: Setup load balancer
+  hosts: load_balancers
+  vars:
+    master_hostnames: "{{ groups['masters'] | join(' ') }}"
+  roles:
+  - { role: ../roles/docker, become: true, user: admin }
+  - { role: ../roles/k8-masters-load-balancer, become: true, user: admin }  
+
+- name: Set api_url to load balancer ip if not defined
+  hosts: masters
+  tasks:
+  - set_fact: 
+      api_url: "{{ groups['load_balancers'][0] }}"
+    when: api_url is undefined
 
 - name: Install masters' core dependencies
   hosts: masters
@@ -13,13 +27,12 @@
   - { role: ../roles/etcd_certificates, become: true, user: admin }
   - { role: ../roles/get_etcd_certificates, become: true, user: admin }
 
-
 - name: Setup etcd credentials on other masters
   hosts: masters[1:]
   roles:
   - { role: ../roles/send_etcd_certificates, become: true, user: admin }
 
-- name: Complete masters setup
+- name: Complete etcd setup
   hosts: masters
   vars:
     inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
@@ -27,8 +40,27 @@
   - { role: ../roles/etcd_peer_certificates, become: true, user: admin }
   - { role: ../roles/etcd, become: true, user: admin }
 
+- name: Initialize first master, setup workers' network, get certificates and get join command
+  hosts: masters[0]
+  vars:
+    inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
+  roles:
+  - { role: ../roles/k8-master-init, become: true, user: admin }
+  - { role: ../roles/k8-flannel-network, become: true, user: admin }
+  - { role: ../roles/k8-get-master-certificates, become: true, user: admin }
+  - { role: ../roles/k8-store-join-command, become: true, user: admin }
+
+- name: Copy certificates to other masters and initialize them
+  hosts: masters[1:]
+  vars:
+    inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
+  roles:
+  - { role: ../roles/k8-send-master-certificates, become: true, user: admin }
+  - { role: ../roles/k8-master-init, become: true, user: admin }
+
 - name: Install Workers
   hosts: workers
   roles:
   - { role: ../roles/docker, become: true, user: admin }
   - { role: ../roles/kubeadm, become: true, user: admin }
+  - { role: ../roles/k8-join-master, become: true, user: admin }

@@ -114,4 +114,16 @@ Note that for this playbook to work well, you need to have setup a cluster with 
 
 ### k8 cluster (ha)
 
-TODO
+Creates a cluster of k8 masters and k8 workers using the existing playbooks. 
+
+The playbook will, optionally, provision a load balancer, although it does not (yet) provide a high availability solution for the load balancing.
+
+If the load balancing part of the script is used, the ip of the first load balancer in the inventory will be used by the k8 cluster for load balancing (making any extra load balancers in the inventory pointless). This is fine for a mock/dev environment, but not suitable for production as it makes the load balancer a single point of failure.
+
+A high availability solution may be obtained by leaving the **load_balancers** inventory empty and doing the following:
+- If you are using a cloud provider that provides a load balancing service, setup a load balancer with your cloud provider and pass its url to the playbook via the **api_url** ansible variable
+- Use a dynamic dns with failure detection like Consul (at that point, the load balancers become optional). If you opt for this, you can make the consul domain either point to a cluster of load balancers or directly to the masters. You can pass the consul domain to **api_url**.
+
+While I could have provided a direct integration with an aws load balancer in the terraformed test environments, I opted to use a less scalable single haproxy setup even for the tests as I really want this playbook to be able to provide a working environment that is cloud agnostic (otherwise, I'd simply be using Kops and not be bothering with this project).
+
+I will later investigate a consul integration within the playbook to achieve true high availability with no extra steps (at least for internal use within the k8 cluster, some extra steps will realistically be needed to access the master API from the outside).
