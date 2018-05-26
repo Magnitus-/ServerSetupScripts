@@ -2,5 +2,6 @@
   script: setup_etcd_pod.sh
   become: yes
   environment:
-    MASTER_ID: "{{ inventory_hostname }}"
+    MASTER_URL: "{{ inventory_hostname }}"
     INVENTORY: "{{ inventory_hostnames }}"
+    ARCHITECTURE: "{{ architecture }}"
