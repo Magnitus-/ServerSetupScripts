@@ -11,3 +11,5 @@
 - name: Starts haproxy
   script: setup.sh
   become: yes
+  environment:
+    ARCHITECTURE: "{{ cpu_architecture }}"

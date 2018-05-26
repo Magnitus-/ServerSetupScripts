@@ -3,4 +3,4 @@
   become: yes
   environment:
     POD_NETWORK_CIDR: "{{ pod_network_cidr }}"
-    ARCHITECTURE: "{{ architecture }}"
+    ARCHITECTURE: "{{ cpu_architecture }}"

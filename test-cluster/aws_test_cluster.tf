@@ -106,15 +106,15 @@ resource "null_resource" "inventory" {
   }
 
   provisioner "local-exec" {
-    command = "echo '[masters]\n${join("\n", aws_instance.test_masters.*.public_ip)}\n' > inventory"
+    command = "echo '[masters]\n${join("\n", formatlist("%s internal_ip=%s", aws_instance.test_masters.*.public_ip, aws_instance.test_masters.*.private_ip))}\n' > inventory"
   }
 
   provisioner "local-exec" {
-    command = "echo '[workers]\n${join("\n", aws_instance.test_workers.*.public_ip)}\n' >> inventory"
+    command = "echo '[workers]\n${join("\n", formatlist("%s internal_ip=%s", aws_instance.test_workers.*.public_ip, aws_instance.test_workers.*.private_ip))}\n' >> inventory"
   }
 
   provisioner "local-exec" {
-    command = "echo '[load_balancers]\n${join("\n", aws_instance.test_load_balancers.*.public_ip)}' >> inventory"
+    command = "echo '[load_balancers]\n${join("\n", formatlist("%s internal_ip=%s", aws_instance.test_load_balancers.*.public_ip, aws_instance.test_load_balancers.*.private_ip))}' >> inventory"
   }
 
   provisioner "local-exec" {

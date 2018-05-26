@@ -1,11 +1,23 @@
 ---
+
+- name: Set hosts facts
+  hosts: all
+  roles:
+  - { role: ../roles/set_host_facts, become: true, user: admin }
+
 - name: Setup load balancer
   hosts: load_balancers
   vars:
     master_hostnames: "{{ groups['masters'] | join(' ') }}"
   roles:
   - { role: ../roles/docker, become: true, user: admin }
-  - { role: ../roles/k8-masters-load-balancer, become: true, user: admin }  
+  - { role: ../roles/k8-masters-load-balancer, become: true, user: admin }
+
+- name: Setup Docker and Kubeadm dependencies on k8 machines
+  hosts: masters,workers
+  roles:
+  - { role: ../roles/docker, become: true, user: admin }
+  - { role: ../roles/kubeadm, become: true, user: admin }
 
 - name: Set api_url to load balancer ip if not defined
   hosts: masters
@@ -14,11 +26,9 @@
       api_url: "{{ groups['load_balancers'][0] }}"
     when: api_url is undefined
 
-- name: Install masters' core dependencies
+- name: Install cfssl on masters
   hosts: masters
   roles:
-  - { role: ../roles/docker, become: true, user: admin }
-  - { role: ../roles/kubeadm, become: true, user: admin }
   - { role: ../roles/cfssl, become: true, user: admin }
 
 - name: Setup etcd credentials on master 0
@@ -61,6 +71,4 @@
 - name: Install Workers
   hosts: workers
   roles:
-  - { role: ../roles/docker, become: true, user: admin }
-  - { role: ../roles/kubeadm, become: true, user: admin }
   - { role: ../roles/k8-join-master, become: true, user: admin }
