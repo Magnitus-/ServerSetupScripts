@@ -16,7 +16,7 @@ cat >/opt/config.yaml <<EOF
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 api:
-  advertiseAddress: ${MASTER_URL}
+  advertiseAddress: ${API_URL}
 etcd:
   endpoints:${INITIAL_CLUSTER}
   caFile: /etc/kubernetes/pki/etcd/ca.pem

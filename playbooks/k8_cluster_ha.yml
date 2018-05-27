@@ -5,6 +5,25 @@
   roles:
   - { role: ../roles/set_host_facts, become: true, user: admin }
 
+- name: Set api_url to load balancer ip if not defined
+  hosts: masters
+  tasks:
+  - set_fact: 
+      api_url: "{{ hostvars[groups['load_balancers'][0]].peer_ip }}"
+    when: api_url is undefined
+
+- name: Prepare inventory list for masters
+  hosts: masters,load_balancers
+  tasks:
+  - set_fact: 
+      inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
+
+- name: Prepare peer inventory list for masters
+  hosts: masters,load_balancers
+  tasks:
+  - set_fact: 
+      peer_inventory_hostnames: "{{ groups['masters'] | map('extract', hostvars, 'peer_ip') | list | join(' ') }}"
+
 - name: Setup load balancer
   hosts: load_balancers
   vars:
@@ -18,32 +37,6 @@
   roles:
   - { role: ../roles/docker, become: true, user: admin }
   - { role: ../roles/kubeadm, become: true, user: admin }
-
-- name: Set api_url to load balancer ip if not defined
-  hosts: masters
-  tasks:
-  - set_fact: 
-      api_url: "{{ groups['load_balancers'][0] }}"
-    when: api_url is undefined
-
-- name: Prepare inventory list for masters
-  hosts: masters
-  tasks:
-  - set_fact: 
-      inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
-
-- name: Prepare peer inventory list for masters
-  hosts: masters
-  tasks:
-  - set_fact: 
-      peer_inventory_hostnames: "{{ groups['masters'] | map('extract', hostvars, 'peer_ip') | list | join(' ') }}"
-
-- name: Set api_url to load balancer ip if not defined
-  hosts: masters
-  tasks:
-  - set_fact: 
-      api_url: "{{ groups['load_balancers'][0] }}"
-    when: api_url is undefined
 
 - name: Install cfssl on masters
   hosts: masters
