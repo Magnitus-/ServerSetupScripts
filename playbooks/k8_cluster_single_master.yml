@@ -1,16 +1,21 @@
 ---
 
+- name: Set hosts facts
+  hosts: all
+  roles:
+  - { role: ../roles/set_host_facts, become: true }
+
 - name: Install Master
   hosts: masters
   roles:
-  - { role: ../roles/docker, become: true, user: admin }
-  - { role: ../roles/kubeadm, become: true, user: admin }
-  - { role: ../roles/k8-master-flannel, become: true, user: admin }
-  - { role: ../roles/k8-store-join-command, become: true, user: admin }
+  - { role: ../roles/docker, become: true }
+  - { role: ../roles/kubeadm, become: true }
+  - { role: ../roles/k8-master-flannel, become: true }
+  - { role: ../roles/k8-store-join-command, become: true }
 
 - name: Install Workers
   hosts: workers
   roles:
-  - { role: ../roles/docker, become: true, user: admin }
-  - { role: ../roles/kubeadm, become: true, user: admin }
-  - { role: ../roles/k8-join-master, become: true, user: admin }
+  - { role: ../roles/docker, become: true }
+  - { role: ../roles/kubeadm, become: true }
+  - { role: ../roles/k8-join-master, become: true }

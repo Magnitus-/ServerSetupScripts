@@ -2,4 +2,4 @@
 
 - script: install_docker.sh
 
-- shell: gpasswd -a {{ user }} docker
+- shell: gpasswd -a {{ ansible_user_id }} docker
