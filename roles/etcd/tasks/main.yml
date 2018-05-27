@@ -1,5 +1,5 @@
 - name: Start etcd in a pod running on the host
-  script: setup_etcd_pod.sh
+  script: setup_etcd_service.sh
   become: yes
   environment:
     PEER_IP: "{{ peer_ip }}"
