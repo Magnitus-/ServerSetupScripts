@@ -116,6 +116,26 @@ Note that for this playbook to work well, you need to have setup a cluster with 
 
 Creates a cluster of k8 masters and k8 workers using the existing playbooks. 
 
+#### Usage 
+
+From the top-level directory, type:
+
+```
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=test-cluster/key -u admin -i test-cluster/inventory
+```
+
+Some customizations are possible by passing the following variables to the playbook:
+- kubernetes_admin: Specifies a user that will be configured on the machines to run kubectl commands. Defaults to the user you run the playbooks with.
+- api_url: Specifics an url (with some sort of load_balancing) that can be used to access the masters' API. Defaults to the load balancer's IP if a load balancer is present in the inventory.
+- connection_timeout: Specifies the connection timeout if you are using a load-balancer. Defaults to 3000ms.
+- client_timeout: Specifies the frontend response timeout if you are using a load-balancer. Defaults to 3000ms.
+- server_timeout: Specifies the backend response timeout if you are using a load-balancer. Defaults to 3000ms.
+
+Additionally, the following variable can be set on hosts in the inventory:
+- internal_ip: Specifies an ip for the machine that should be used when connecting to other machines in the k8 cluster. Defaults to the inventory hostname of the machine.
+
+#### Note
+
 The playbook will, optionally, provision a load balancer, although it does not (yet) provide a high availability solution for the load balancing.
 
 If the load balancing part of the script is used, the ip of the first load balancer in the inventory will be used by the k8 cluster for load balancing (making any extra load balancers in the inventory pointless). This is fine for a mock/dev environment, but not suitable for production as it makes the load balancer a single point of failure.
