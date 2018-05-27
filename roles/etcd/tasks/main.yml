@@ -2,6 +2,6 @@
   script: setup_etcd_pod.sh
   become: yes
   environment:
-    MASTER_URL: "{{ inventory_hostname }}"
-    INVENTORY: "{{ inventory_hostnames }}"
-    ARCHITECTURE: "{{ architecture }}"
+    PEER_IP: "{{ peer_ip }}"
+    INVENTORY: "{{ peer_inventory_hostnames }}"
+    ARCHITECTURE: "{{ cpu_architecture }}"

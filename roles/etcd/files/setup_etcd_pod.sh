@@ -11,7 +11,7 @@ do
         INITIAL_CLUSTER="${INITIAL_CLUSTER},etcd${INDEX}=https://${ELEMENT}:2380"
     fi
 
-    if [ "$ELEMENT" == "$MASTER_URL" ]; then
+    if [ "$ELEMENT" == "$PEER_IP" ]; then
         NAME="etcd${INDEX}"
     fi
 
@@ -27,10 +27,10 @@ fi
 CMD="etcd \
 --name=${NAME}
 --data-dir=/var/lib/etcd \
---listen-client-urls https://0.0.0.0:2379 \
---advertise-client-urls https://${MASTER_URL}:2379 \
---listen-peer-urls https://0.0.0.0:2380 \
---initial-advertise-peer-urls https://${MASTER_URL}:2380 \
+--listen-client-urls https://${PEER_IP}:2379 \
+--advertise-client-urls https://${PEER_IP}:2379 \
+--listen-peer-urls https://${PEER_IP}:2380 \
+--initial-advertise-peer-urls https://${PEER_IP}:2380 \
 --cert-file=/certs/server.pem \
 --key-file=/certs/server-key.pem \
 --client-cert-auth \

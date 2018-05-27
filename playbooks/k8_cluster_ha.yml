@@ -26,6 +26,25 @@
       api_url: "{{ groups['load_balancers'][0] }}"
     when: api_url is undefined
 
+- name: Prepare inventory list for masters
+  hosts: masters
+  tasks:
+  - set_fact: 
+      inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
+
+- name: Prepare peer inventory list for masters
+  hosts: masters
+  tasks:
+  - set_fact: 
+      peer_inventory_hostnames: "{{ groups['masters'] | map('extract', hostvars, 'peer_ip') | list | join(' ') }}"
+
+- name: Set api_url to load balancer ip if not defined
+  hosts: masters
+  tasks:
+  - set_fact: 
+      api_url: "{{ groups['load_balancers'][0] }}"
+    when: api_url is undefined
+
 - name: Install cfssl on masters
   hosts: masters
   roles:
@@ -44,16 +63,12 @@
 
 - name: Complete etcd setup
   hosts: masters
-  vars:
-    inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
   roles:
   - { role: ../roles/etcd_peer_certificates, become: true, user: admin }
   - { role: ../roles/etcd, become: true, user: admin }
 
 - name: Initialize first master, setup workers' network, get certificates and get join command
   hosts: masters[0]
-  vars:
-    inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
   roles:
   - { role: ../roles/k8-master-init, become: true, user: admin }
   - { role: ../roles/k8-flannel-network, become: true, user: admin }
@@ -62,8 +77,6 @@
 
 - name: Copy certificates to other masters and initialize them
   hosts: masters[1:]
-  vars:
-    inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
   roles:
   - { role: ../roles/k8-send-master-certificates, become: true, user: admin }
   - { role: ../roles/k8-master-init, become: true, user: admin }
