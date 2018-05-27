@@ -4,3 +4,4 @@
   environment:
     POD_NETWORK_CIDR: "{{ pod_network_cidr }}"
     ARCHITECTURE: "{{ cpu_architecture }}"
+    KUBERNETES_ADMIN: "{{ kubernetes_admin }}"

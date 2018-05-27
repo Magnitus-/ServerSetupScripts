@@ -33,8 +33,13 @@ EOF
     kubeadm init --config=/opt/config.yaml;
     rm /opt/config.yaml;
 
-    #For the admin to access kubernetes without sudo
+    #For the admin to access kubernetes with the right configurations
     mkdir -p /home/$KUBERNETES_ADMIN/.kube;
     cp /etc/kubernetes/admin.conf /home/$KUBERNETES_ADMIN/.kube/config;
-    chown -R $KUBERNETES_ADMIN:$KUBERNETES_ADMIN /home/$KUBERNETES_ADMIN;
+    chown -R $KUBERNETES_ADMIN:$KUBERNETES_ADMIN /home/$KUBERNETES_ADMIN/.kube;
+
+    #For the root to access kubernetes with the right configurations
+    mkdir -p /root/.kube;
+    cp /etc/kubernetes/admin.conf /root/.kube/config;
+    chown -R root:root /root/.kube;
 fi
