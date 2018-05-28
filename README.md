@@ -26,7 +26,7 @@ terraform destroy
 
 ### Cluster (3 machines by default)
 
-Same steps as the single server environment, but under the ```test-cluster``` directory instead.
+Same steps as the single server environment, but under the ```dev-cluster/aws``` directory instead.
 
 You can overwrite the **workers_count** and **masters_count** variables when setting up your environment (by passing their override values to the **terraform apply** command). The default values are a single master and two workers.
 
@@ -56,7 +56,7 @@ ssh -i key admin@<ip of the host>
 
 ### Cluster
 
-Similar to the single server, but under the ```test-cluster``` directory. Also note that the **inventory** file will contain a list of several machines and you can ssh into any one of them.
+Similar to the single server, but under the ```dev-cluster/aws``` directory. Also note that the **inventory** file will contain a list of several machines and you can ssh into any one of them.
 
 ## Test Ansible Roles
 
@@ -107,7 +107,7 @@ Creates a cluster of one k8 master and k8 workers using the existing playbooks.
 From the top-level directory, type:
 
 ```
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_single_master.yml --private-key=test-cluster/key -u admin -i test-cluster/inventory
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_single_master.yml --private-key=dev-cluster/key -u admin -i test-cluster/aws/inventory
 ```
 
 Note that for this playbook to work well, you need to have setup a cluster with a single master and at least one worker.
@@ -121,7 +121,7 @@ Creates a cluster of k8 masters and k8 workers using the existing playbooks.
 From the top-level directory, type:
 
 ```
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=test-cluster/key -u admin -i test-cluster/inventory
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=dev-cluster/key -u admin -i test-cluster/aws/inventory
 ```
 
 Some customizations are possible by passing the following variables to the playbook:

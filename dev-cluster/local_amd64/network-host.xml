@@ -1,0 +1,10 @@
+<network>
+    <name>k8-host</name>
+    <forward dev='eth0' mode='nat'/>
+    <bridge name='k80' stp='on' delay='0' />
+    <ip address="192.168.80.1" netmask="255.255.255.0">
+        <dhcp>
+            <range start="192.168.80.2" end="192.168.80.254" />
+        </dhcp>
+    </ip>
+</network>
