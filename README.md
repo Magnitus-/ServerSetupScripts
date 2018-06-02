@@ -95,7 +95,7 @@ Initialize a k8 master using flannel as the network driver. Note that both docke
 From the top-level directory, type:
 
 ```
-ansible-playbook test-playbooks/install_k8_master.yml --private-key=test-server/key -u admin -i test-server/inventory
+ansible-playbook test-playbooks/install_k8_master.yml --private-key=dev-server/aws/key -u admin -i dev-server/aws/inventory
 ```
 
 ## Test Ansible Playbooks
@@ -121,7 +121,7 @@ Creates a cluster of k8 masters and k8 workers using the existing playbooks.
 From the top-level directory, type:
 
 ```
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=dev-cluster/key -u admin -i test-cluster/aws/inventory
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=dev-cluster/aws/key -u admin -i dev-cluster/aws/inventory
 ```
 
 Some customizations are possible by passing the following variables to the playbook:
