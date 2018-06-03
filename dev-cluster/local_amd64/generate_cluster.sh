@@ -1,17 +1,27 @@
 #!/usr/bin/env bash
 
+WORKER_RAM=${WORKER_RAM:-4G}
+MASTER_RAM=${MASTER_RAM:-2G}
+LBL_RAM=${LBL_RAM:-1G}
+
 MASTER0=$(virsh list --name --all | grep master0)
 
 if [ -z "$MASTER0" ]; then
-    virt-clone --original=k8_vm_template --name=master0 --file=$(pwd)/disks/master0.img;
-    virt-clone --original=k8_vm_template --name=master1 --file=$(pwd)/disks/master1.img;
-    virt-clone --original=k8_vm_template --name=master2 --file=$(pwd)/disks/master2.img;
 
-    virt-clone --original=k8_vm_template --name=worker0 --file=$(pwd)/disks/worker0.img;
-    virt-clone --original=k8_vm_template --name=worker1 --file=$(pwd)/disks/worker1.img;
-    virt-clone --original=k8_vm_template --name=worker2 --file=$(pwd)/disks/worker2.img;
+    for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
+        virt-clone --original=k8_vm_template --name=${VM} --file=$(pwd)/disks/${VM}.img;
 
-    virt-clone --original=k8_vm_template --name=lbl0 --file=$(pwd)/disks/lbl0.img;
+        if [[ "$VM" =~ "master" ]]; then
+            RAM=$MASTER_RAM
+        elif [[ "$VM" =~ "worker" ]]; then
+            RAM=$WORKER_RAM
+        else
+            RAM=$LBL_RAM
+        fi
+
+        virsh setmaxmem $VM $RAM --config
+        virsh setmem $VM $RAM --config
+    done
 fi
 
 #http://libguestfs.org/virt-builder.1.html#ssh-keys
