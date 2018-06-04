@@ -1,0 +1,8 @@
+---
+
+- name: Set Proper host names
+  hosts: all
+  become: True
+  tasks:
+  - hostname:
+      name: "{{ cluster_hostname }}"
