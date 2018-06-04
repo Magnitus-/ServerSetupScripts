@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 
+source utils.sh;
+
 function write_vm {
     #TODO: Remove arp dependency, use 'virsh domifaddr <domain>' instead...
-    MAC_ADDRESS=$(virsh domiflist $1 | head -n3 | tail -n1 | tr -s ' ' | cut -d ' ' -f5)
-    VM_IP=$(arp -e | grep $MAC_ADDRESS | cut -d ' ' -f1)
-
-    while [ -z "$VM_IP" ]; do
-        sleep 2;
-        K8_VM_TEMPLATE_RUNNING=$(virsh list --name | grep k8_vm_template);
-    done
-
+    VM_IP=$(get_domain_ip $1)
     echo "$VM_IP cluster_hostname=$1" >> $(pwd)/inventory
 } 
 
