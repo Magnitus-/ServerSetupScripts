@@ -22,10 +22,13 @@ if [ -z "$MASTER0" ]; then
         virsh setmaxmem $VM $RAM --config
         virsh setmem $VM $RAM --config
     done
-    
+
     ./start_cluster.sh;
     ./generate_inventory.sh;
-    #ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook set_hosts.yml -i inventory; 
+    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook set_hosts.yml -i inventory;
+    ./shutdown_cluster.sh;
+    ./start_cluster.sh;
+    #./fixate_cluster_ips.sh;
 fi
 
 #http://libguestfs.org/virt-builder.1.html#ssh-keys

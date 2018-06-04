@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 function write_vm {
+    #TODO: Remove arp dependency, use 'virsh domifaddr <domain>' instead...
     MAC_ADDRESS=$(virsh domiflist $1 | head -n3 | tail -n1 | tr -s ' ' | cut -d ' ' -f5)
     VM_IP=$(arp -e | grep $MAC_ADDRESS | cut -d ' ' -f1)
 
