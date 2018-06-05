@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FLANNEL_DS=$(kubectl get ds -n kube-system kube-flannel-ds | grep NotFound)
+FLANNEL_DS=$(kubectl get ds -n kube-system kube-flannel-ds | tail -n1 | grep kube-flannel-ds)
 if [ -z "$FLANNEL_DS" ]; then
     #https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
     sysctl net.bridge.bridge-nf-call-iptables=1;
