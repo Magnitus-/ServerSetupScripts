@@ -10,7 +10,7 @@ if [ -z "$K8_VM_TEMPLATE" ]; then
     --ram=1024 \
     --vcpus=4 \
     --cpu host-passthrough,cache.mode=passthrough \
-    --disk size=2,path=$(pwd)/disks/v8_template.img,bus=virtio,cache=none \
+    --disk size=4,path=$(pwd)/disks/v8_template.img,bus=virtio,cache=none \
     --initrd-inject=preseed.cfg \
     --location http://ftp.us.debian.org/debian/dists/stable/main/installer-amd64/ \
     --os-type linux \
