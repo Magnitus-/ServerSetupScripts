@@ -30,7 +30,6 @@ apiServerExtraArgs:
   apiserver-count: "${INDEX}"
 EOF
 
-    swapoff -a;
     kubeadm init --config=/opt/config.yaml;
     rm /opt/config.yaml;
 
