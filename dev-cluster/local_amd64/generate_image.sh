@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+DISK_SIZE=${DISK_SIZE:-4}
+VIRTUAL_CPUS=${VIRTUAL_CPUS:-4}
+
 K8_VM_TEMPLATE=$(virsh list --name --all | grep k8_vm_template)
 
 if [ -z "$K8_VM_TEMPLATE" ]; then
@@ -8,9 +11,9 @@ if [ -z "$K8_VM_TEMPLATE" ]; then
     virt-install \
     --name=k8_vm_template \
     --ram=1024 \
-    --vcpus=4 \
+    --vcpus=$VIRTUAL_CPUS \
     --cpu host-passthrough,cache.mode=passthrough \
-    --disk size=4,path=$(pwd)/disks/v8_template.img,bus=virtio,cache=none \
+    --disk size=$DISK_SIZE,path=$(pwd)/disks/v8_template.img,bus=virtio,cache=none \
     --initrd-inject=preseed.cfg \
     --location http://ftp.us.debian.org/debian/dists/stable/main/installer-amd64/ \
     --os-type linux \

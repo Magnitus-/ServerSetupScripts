@@ -30,6 +30,3 @@ if [ -z "$MASTER0" ]; then
     ./start_cluster.sh;
     ./fixate_cluster_ips.sh;
 fi
-
-#http://libguestfs.org/virt-builder.1.html#ssh-keys
-#virt-sysprep --hostname=master0 --ssh-inject=debian --domain=master0
