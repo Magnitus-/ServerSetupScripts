@@ -1,6 +1,0 @@
----
-
-- name: Install k8 master with flannel
-  hosts: test_server
-  roles:
-  - { role: ../roles/k8-master-flannel, become: true, user: admin }

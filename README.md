@@ -2,70 +2,36 @@
 
 Scripts to remotely setup hosts via ansible
 
-As I'm mostly using Docker, the requirements are quite minimal.
+As I'm mostly using Docker and Kubernetes, the requirements are not that much.
 
-## Setup Test Environment
+## Dev Environments
 
-You need terraform for this. Note that the test environment is on AWS, so you should not be running it indefinitely.
+The following dev environments (all Debian) are provdided with the project:
 
-### Single Server
+- A single server privisioned on aws via Terraform
+- A cluster comprising a variable number of masters, workers an optional load balancer provisioned on aws via Terraform
+- A cluster comprising 3 masters, 3 workers and a load balancer provioned locally via libvirt/kvm
 
-Go in ```test-server``` and type:
+As my plan all along is to support HA Kubernetes deployment on a Raspberry Pi, an emulated ARM 64 environment will be added to the roster soon.
 
-```
-terraform apply
-```
+The single server environment and accompanying documentation can be found in the following directory: **dev-server**
 
-You'll also need to specify **yes**
+The aws cluster environment and accompanying documentation can be found in the following directory: **dev-cluster/aws**
 
-To destroy it, you can simply type:
-
-```
-terraform destroy
-```
-
-### Cluster (3 machines by default)
-
-Same steps as the single server environment, but under the ```dev-cluster/aws``` directory instead.
-
-You can overwrite the **workers_count** and **masters_count** variables when setting up your environment (by passing their override values to the **terraform apply** command). The default values are a single master and two workers.
-
-A command overwriting the values (in this case for 3 workers and 3 masters) would go like this:
-
-```
-terraform apply -var 'workers_count=3' -var 'masters_count=3'
-```
-
-Once you would be done with the above, you would tear down the machines by typing:
-
-```
-terraform destroy -var 'workers_count=3' -var 'masters_count=3'
-```
-
-## Sshing Into Test environment
-
-### Single Server
-
-Go in ```test-server``` and look at the **inventory** file to get the test server ip.
-
-From there, in the **test-environment** directory, type:
-
-```
-ssh -i key admin@<ip of the host>
-```
-
-### Cluster
-
-Similar to the single server, but under the ```dev-cluster/aws``` directory. Also note that the **inventory** file will contain a list of several machines and you can ssh into any one of them.
+The libvirt/kvm environnent and accompanying documentation can be found in the following directory: **dev-cluster/local_amd64**
 
 ## Test Ansible Roles
+
+Most of the roles in this project are part of a kubernetes setup and are best used as part of the kubernetes playbook.
+
+However, the **docker** and **python-packages** roles may be of interest standalone and thus have separate test playbooks to test them.
 
 ### Docker
 
 From the top-level directory, type:
 
 ```
-ansible-playbook test-playbooks/install_docker.yml --private-key=test-server/key -u admin -i test-server/inventory
+ansible-playbook test-playbooks/install_docker.yml --private-key=dev-server/key -u admin -i dev-server/inventory
 ```
 
 ### python-packages
@@ -75,27 +41,7 @@ The latest version of the **pip** tool and the **docker** package (version 3.2.1
 From the top-level directory, type:
 
 ```
-ansible-playbook test-playbooks/install_python_packages.yml --private-key=test-server/key -u admin -i test-server/inventory
-```
-
-### kubeadm
-
-kubeadm, kubelet and kubectl will be installed. Note that docker is expected to already be installed on the host.
-
-From the top-level directory, type:
-
-```
-ansible-playbook test-playbooks/install_kubeadm.yml --private-key=test-server/key -u admin -i test-server/inventory
-```
-
-### k8 master
-
-Initialize a k8 master using flannel as the network driver. Note that both docker and kubeadm are expected to already be installed on the host.
-
-From the top-level directory, type:
-
-```
-ansible-playbook test-playbooks/install_k8_master.yml --private-key=dev-server/aws/key -u admin -i dev-server/aws/inventory
+ansible-playbook test-playbooks/install_python_packages.yml --private-key=dev-server/key -u admin -i dev-server/inventory
 ```
 
 ## Test Ansible Playbooks
@@ -118,10 +64,16 @@ Creates a cluster of k8 masters and k8 workers using the existing playbooks.
 
 #### Usage 
 
-From the top-level directory, type:
+If you provisioned an aws cluster, type:
 
 ```
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=dev-cluster/aws/key -u admin -i dev-cluster/aws/inventory
+```
+
+If you provisioned a local libvirt cluster, type:
+
+```
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml -i dev-cluster/local_amd64/inventory
 ```
 
 Some customizations are possible by passing the following variables to the playbook:
