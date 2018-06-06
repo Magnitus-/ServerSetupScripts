@@ -80,7 +80,7 @@ Each time you create a new cluster, a new **inventory** file will be generated a
 
 # SSH
 
-Currently, you can ssh to your vms using the username **debian** and the password **i_am_a_strong_password**.
+Currently, you can ssh to your vms using the username **debian** and the password **i_am_a_strong_password_i_think**.
 
 Adding an ssh key and customizable password to the environment is in the plans, but is not the foremost priority given that access to the environment is very restricted beyond your host machine.
 
