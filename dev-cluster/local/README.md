@@ -6,7 +6,7 @@ Currently, the environment is hardcoded to generate 3 masters, 3 workers and a l
 
 # VM Specs
 
-The CPU architecture of the vm will match you're machine's (presumably amd64, hence the name of the environment's directory). Note that the playbooks in this project are supported for an amd64 and arm64 architectures (and the arm64 architecture is untested, that will be next)
+By default, the vms run on kvm using the host's cpu architecture (amd64 is assumed). Alternatively, the arm64 cpu architecture can be emulated via qemu. The **VM_TEMPLATE** environment variable controls this (**k8_vm_template** for amd64/kvm, **k8_arm64_vm_template** for arm64/qemu). Note that arm64 cpu emulation on qemu will run considerable slower than amd64 with cpu passthrough on kvm. It's suitable if you just want to test the installer on that architecture (my use case), but not if you intent to do serious work.
 
 By default, the vms will have 4GB of disk space (a big chunk of which will be used by the OS and k8 dependencies) and 4 vcpus (meaning they can use up to 4 cores as needed).
 
@@ -15,6 +15,8 @@ Additionally, the masters will use 2GB of RAM, the workers will use 4 GB of RAM 
 Fortunately, all of the above are customizable by setting the following environment variables in your shell prior to running the scripts:
 
 ```
+#Setting vm cpu to emulated arm64
+export VM_TEMPLATE=k8_arm64_vm_template
 #Assigning 6 GB for disk space
 export DISK_SIZE=6
 #Letting vms use up to 8 cores as needed

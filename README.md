@@ -10,15 +10,13 @@ The following dev environments (all Debian) are provdided with the project:
 
 - A single server privisioned on aws via Terraform
 - A cluster comprising a variable number of masters, workers an optional load balancer provisioned on aws via Terraform
-- A cluster comprising 3 masters, 3 workers and a load balancer provioned locally via libvirt/kvm
-
-As my plan all along is to support HA Kubernetes deployment on a Raspberry Pi, an emulated ARM 64 environment will be added to the roster soon.
+- A cluster comprising 3 masters, 3 workers and a load balancer provioned locally via libvirt and kvm/qemu (adm64 supported natively via kvm, arm64 emulated via qemu)
 
 The single server environment and accompanying documentation can be found in the following directory: **dev-server**
 
 The aws cluster environment and accompanying documentation can be found in the following directory: **dev-cluster/aws**
 
-The libvirt/kvm environnent and accompanying documentation can be found in the following directory: **dev-cluster/local_amd64**
+The libvirt/kvm environnent and accompanying documentation can be found in the following directory: **dev-cluster/local**
 
 ## Test Ansible Roles
 
@@ -73,7 +71,7 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --p
 If you provisioned a local libvirt cluster, type:
 
 ```
-ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml -i dev-cluster/local_amd64/inventory
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml -i dev-cluster/local/inventory
 ```
 
 Some customizations are possible by passing the following variables to the playbook:
