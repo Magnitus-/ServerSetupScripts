@@ -47,12 +47,24 @@ CMD="etcd \
 --initial-cluster-state new"
 
     #TODO: Add health check
-    docker run -d \
-               --name="k8_master_etcd" \
-               --restart=always \
-               --network=host \
-               --entrypoint="" \
-               -v /var/lib/etcd:/var/lib/etcd \
-               -v /etc/kubernetes/pki/etcd:/certs \
-               $IMAGE $CMD;
+    if [ "$ARCHITECTURE" = "amd64" ]; then
+        docker run -d \
+                   --name="k8_master_etcd" \
+                   --restart=always \
+                   --network=host \
+                   --entrypoint="" \
+                   -v /var/lib/etcd:/var/lib/etcd \
+                   -v /etc/kubernetes/pki/etcd:/certs \
+                   $IMAGE $CMD;
+    else
+        docker run -d \
+                   --name="k8_master_etcd" \
+                   --restart=always \
+                   --network=host \
+                   --entrypoint="" \
+                   -e "ETCD_UNSUPPORTED_ARCH=arm64" \
+                   -v /var/lib/etcd:/var/lib/etcd \
+                   -v /etc/kubernetes/pki/etcd:/certs \
+                   $IMAGE $CMD;
+    fi
 fi
