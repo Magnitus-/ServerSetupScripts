@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+VM_TEMPLATE=${VM_TEMPLATE:-"k8_vm_template"}
+
 source utils.sh;
 
 for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
@@ -14,7 +16,11 @@ done
 ./shutdown_cluster.sh;
 
 for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
-    virsh undefine $VM;
+    if [ "$VM_TEMPLATE" = "k8_vm_template"  ]; then
+       virsh undefine $VM;
+    else
+       virsh undefine --nvram $VM;
+    fi
 done
 
 for FILENAME in $(pwd)/disks/*; do
