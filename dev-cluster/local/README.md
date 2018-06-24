@@ -4,6 +4,16 @@ This is a multi virtual machines cluster environment to run locally, using libvi
 
 Currently, the environment is hardcoded to generate 3 masters, 3 workers and a load balancer.
 
+# Important Note
+
+I couldn't get the kubernetes playbooks to work on the arm64 emulated qemu environment. The underlying cause of the failure is unknown (the k8 api proved to be unstable and kept crashing). It could have been quirks with my installation of qemu or edge cases triggered by hardware emulation or the abysmal performance it caused.
+
+Ultimately, for arm64, I got the playbooks to work on a Scaleway cluster of arm64 machines which validates the arm64 use-case.
+
+Furthermore, the more usable amd64 setup with kvm works and has been tested multiple times at this point.
+
+Given that the only reason for the arm64 emulated environment was to test the installation done by the kubernetes playbooks (arm64 emulation performance was too poor for me to consider it usable beyond that use-case), I do not intent to investigate the problem further.
+
 # VM Specs
 
 By default, the vms run on kvm using the host's cpu architecture (amd64 is assumed). Alternatively, the arm64 cpu architecture can be emulated via qemu. The **VM_TEMPLATE** environment variable controls this (**k8_vm_template** for amd64/kvm, **k8_arm64_vm_template** for arm64/qemu). Note that arm64 cpu emulation on qemu will run considerable slower than amd64 with cpu passthrough on kvm. It's suitable if you just want to test the installer on that architecture (my use case), but not if you intent to do serious work.
