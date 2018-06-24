@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
 if [ ! -d /etc/kubernetes/pki/etcd ]; then
+    if [ $ARCHITECTURE = "amd64" ]; then
+        IMAGE=magnitus/cfssl:latest
+    elif [ $ARCHITECTURE = "arm64" ]; then
+        IMAGE=magnitus/cfssl:arm64-latest
+    else
+        echo "unsupported architecture";
+        exit 1;
+    fi
+
     mkdir -p /etc/kubernetes/pki/etcd;
     cd /etc/kubernetes/pki/etcd;
     
@@ -53,7 +62,8 @@ EOF
 }
 EOF
 
-    cfssl gencert -initca ca-csr.json | cfssljson -bare ca -;
+    docker run --rm -v $(pwd):/opt $IMAGE cfssl gencert -initca ca-csr.json \
+    | docker run --rm -i -v $(pwd):/opt $IMAGE cfssljson -bare ca -
 
     #Client certificate generation
    cat >client.json <<EOF
@@ -66,5 +76,6 @@ EOF
 }
 EOF
 
-    cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json | cfssljson -bare client;
+    docker run --rm -v $(pwd):/opt $IMAGE cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json \
+    | docker run --rm -i -v $(pwd):/opt $IMAGE cfssljson -bare client -
 fi

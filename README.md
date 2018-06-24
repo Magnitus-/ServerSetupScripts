@@ -9,7 +9,8 @@ As I'm mostly using Docker and Kubernetes, the requirements are not that much.
 The following dev environments (all Debian) are provdided with the project:
 
 - A single server privisioned on aws via Terraform
-- A cluster comprising a variable number of masters, workers an optional load balancer provisioned on aws via Terraform
+- A cluster comprising a variable number of masters, workers and an optional load balancer provisioned on aws via Terraform
+- A cluster comprising a variable number of masters, workers and an optional load balancer provisioned, all arm64 machines, on Scaleway via Terraform
 - A cluster comprising 3 masters, 3 workers and a load balancer provioned locally via libvirt and kvm/qemu (adm64 supported natively via kvm, arm64 emulated via qemu)
 
 The single server environment and accompanying documentation can be found in the following directory: **dev-server**
@@ -66,6 +67,12 @@ If you provisioned an aws cluster, type:
 
 ```
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=dev-cluster/aws/key -u admin -i dev-cluster/aws/inventory
+```
+
+If you provisioned a scaleway cluster (assuming your set your local private key as trusted on your account), type:
+
+```
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_cluster_ha.yml --private-key=~/.ssh/id_rsa -u root -i dev-cluster/scaleway_arm64/inventory
 ```
 
 If you provisioned a local libvirt cluster, type:

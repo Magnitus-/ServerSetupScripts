@@ -38,11 +38,6 @@
   - { role: ../roles/docker, become: true }
   - { role: ../roles/kubeadm, become: true }
 
-- name: Install cfssl on masters
-  hosts: masters
-  roles:
-  - { role: ../roles/cfssl, become: true }
-
 - name: Setup etcd credentials on master 0
   hosts: masters[0]
   roles:

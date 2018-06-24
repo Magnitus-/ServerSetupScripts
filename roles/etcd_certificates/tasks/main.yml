@@ -1,3 +1,5 @@
 - name: Generate master and client etcd certificates
   script: generate.sh
   become: yes
+  environment:
+    ARCHITECTURE: "{{ cpu_architecture }}"
