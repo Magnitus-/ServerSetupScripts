@@ -37,15 +37,15 @@ resource "null_resource" "inventory" {
   }
 
   provisioner "local-exec" {
-    command = "echo '[masters]\n${join("\n", formatlist("%s", scaleway_server.masters.*.public_ip))}\n' > inventory"
+    command = "echo '[masters]\n${join("\n", formatlist("%s internal_ip=%s", scaleway_server.masters.*.public_ip, scaleway_server.masters.*.private_ip))}\n' > inventory"
   }
 
   provisioner "local-exec" {
-    command = "echo '[workers]\n${join("\n", formatlist("%s", scaleway_server.workers.*.public_ip))}\n' >> inventory"
+    command = "echo '[workers]\n${join("\n", formatlist("%s internal_ip=%s", scaleway_server.workers.*.public_ip, scaleway_server.workers.*.private_ip))}\n' >> inventory"
   }
 
   provisioner "local-exec" {
-    command = "echo '[load_balancers]\n${join("\n", formatlist("%s", scaleway_server.load_balancers.*.public_ip))}' >> inventory"
+    command = "echo '[load_balancers]\n${join("\n", formatlist("%s internal_ip=%s", scaleway_server.load_balancers.*.public_ip, scaleway_server.load_balancers.*.private_ip))}' >> inventory"
   }
 
   provisioner "local-exec" {
