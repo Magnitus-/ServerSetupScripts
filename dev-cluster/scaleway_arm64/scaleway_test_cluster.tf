@@ -9,6 +9,19 @@ resource "scaleway_server" "masters" {
   dynamic_ip_required = true
 
   count = "${var.masters_count}"
+
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = "${file(var.ssh_key)}"
+    }
+
+    inline = [
+      "echo master${count.index} > /etc/hostname",
+      "shutdown -r now",
+    ]
+  }
 }
 
 resource "scaleway_server" "workers" {
@@ -18,6 +31,19 @@ resource "scaleway_server" "workers" {
   dynamic_ip_required = true
 
   count = "${var.workers_count}"
+
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = "${file(var.ssh_key)}"
+    }
+
+    inline = [
+      "echo worker${count.index} > /etc/hostname",
+      "shutdown -r now",
+    ]
+  }
 }
 
 resource "scaleway_server" "load_balancers" {
@@ -27,6 +53,19 @@ resource "scaleway_server" "load_balancers" {
   dynamic_ip_required = true
 
   count = "${var.masters_count > 1 ? 1 : 0}"
+
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = "${file(var.ssh_key)}"
+    }
+
+    inline = [
+      "echo load_balancer${count.index} > /etc/hostname",
+      "shutdown -r now",
+    ]
+  }
 }
 
 resource "null_resource" "inventory" {
