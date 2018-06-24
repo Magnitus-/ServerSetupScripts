@@ -1,0 +1,11 @@
+---
+- name: Set hosts facts
+  hosts: all
+  roles:
+  - { role: ../roles/set_host_facts, become: true }
+
+- name: Install Kubeadm base dependencies
+  hosts: all
+  roles:
+  - { role: ../roles/docker, become: true }
+  - { role: ../roles/kubeadm, become: true }
