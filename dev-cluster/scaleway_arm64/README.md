@@ -8,7 +8,7 @@ You'll need terraform to spin up the cluster.
 
 # Manual Setup Steps
 
-- For the ssh key of the machines, you will need to manually authenticate your ssh key on the Scaleway dashboard.
+- For the ssh key of the machines, you will need to manually authenticate your ssh key on the Scaleway dashboard. If the key is not **~/.ssh/id_rsa** on your host, make sure to override the **ssh_key** variable with the path of the key you are using on your host when you call the terraform scripts.
 - You will also need to define your Scaleway credentials (organization id and secret key) in environment variables prior to running Terraform as explained at the bottom of this page: https://www.terraform.io/docs/providers/scaleway/
 
 
@@ -38,6 +38,7 @@ Once you would be done with the above, you would tear down the machines by typin
 
 ```
 terraform destroy -var 'workers_count=3' -var 'masters_count=3'
+```
 
 # Artifacts
 

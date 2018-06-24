@@ -18,8 +18,7 @@ resource "scaleway_server" "masters" {
     }
 
     inline = [
-      "echo master${count.index} > /etc/hostname",
-      "shutdown -r now",
+      "hostname master${count.index}",
     ]
   }
 }
@@ -40,8 +39,7 @@ resource "scaleway_server" "workers" {
     }
 
     inline = [
-      "echo worker${count.index} > /etc/hostname",
-      "shutdown -r now",
+      "hostname worker${count.index}",
     ]
   }
 }
@@ -62,8 +60,7 @@ resource "scaleway_server" "load_balancers" {
     }
 
     inline = [
-      "echo load_balancer${count.index} > /etc/hostname",
-      "shutdown -r now",
+      "hostname load_balancer${count.index}",
     ]
   }
 }
