@@ -4,7 +4,7 @@ provider "scaleway" {
 
 resource "scaleway_server" "masters" {
   name                = "master"
-  image               = "c567a8be-a868-40b9-aba9-29c5f31fa11c"
+  image               = "${var.image}"
   type                = "ARM64-2GB"
   dynamic_ip_required = true
 
@@ -13,7 +13,7 @@ resource "scaleway_server" "masters" {
 
 resource "scaleway_server" "workers" {
   name                = "worker"
-  image               = "c567a8be-a868-40b9-aba9-29c5f31fa11c"
+  image               = "${var.image}"
   type                = "ARM64-2GB"
   dynamic_ip_required = true
 
@@ -22,7 +22,7 @@ resource "scaleway_server" "workers" {
 
 resource "scaleway_server" "load_balancers" {
   name                = "load_balancer"
-  image               = "c567a8be-a868-40b9-aba9-29c5f31fa11c"
+  image               = "${var.image}"
   type                = "ARM64-2GB"
   dynamic_ip_required = true
 
