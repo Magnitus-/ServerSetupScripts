@@ -60,7 +60,7 @@ resource "scaleway_server" "load_balancers" {
     }
 
     inline = [
-      "hostname load_balancer${count.index}",
+      "hostname lb${count.index}",
     ]
   }
 }

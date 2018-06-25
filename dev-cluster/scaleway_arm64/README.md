@@ -65,3 +65,14 @@ First of all, it seems to only be able to provision one machine at a time.
 Second, in about 50% of cases, it hangs at some point (could be that it was just incredibly slow beyond my patience to wait) trying to provision a server that remains "off" and never boots, forcing me to perform a terraform destroy and then cleanup the resources of the server that didn't start.
 
 Even with those caveats, I still consider the Terraform route faster than provisioning the machines by hand.
+
+# Time Optimization
+
+You probably won't be spinning the environments repeatedly for testing purporses like I did, but regardless, if you want to speed up the provision of a cluster a little, you can do the following:
+
+- Create a single arm64 debian machine on Scaleway
+- Run the **k8_base_image** playbook on it
+- Take a snapshot of the vm and make an image from it
+- Destroy your vm
+- Get the ID of your image from the Scaleway dashboard
+- When you provision the terraform environment, pass the ID of your image to the **image** variable (ie, **terraform apply -var 'image=<ID>'**). Then, your vms will have **Docker** and **Kubeadm** pre-installed and the playbooks won't have to install them.
