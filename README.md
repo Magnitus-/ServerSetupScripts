@@ -104,3 +104,17 @@ A high availability solution may be obtained by leaving the **load_balancers** i
 While I could have provided a direct integration with an aws load balancer in the terraformed test environments, I opted to use a less scalable single haproxy setup even for the tests as I really want this playbook to be able to provide a working environment that is cloud agnostic (otherwise, I'd simply be using Kops and not be bothering with this project).
 
 I will later investigate a consul integration within the playbook to achieve true high availability with no extra steps (at least for internal use within the k8 cluster, some extra steps will realistically be needed to access the master API from the outside).
+
+### k8 Base Image
+
+This playbook provisions the **Docker** and **Kubeadm** kubernetes dependencies to all the machines in the inventory.
+
+The idea behind it is to execute this playbook on a single machine and then make a re-usable image out of that machine.
+
+#### Usage 
+
+Type:
+
+```
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_base_image.yml --private-key=<Your ssh key> -u <The vm's sudo user> -i <The vm's inventory>
+```
