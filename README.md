@@ -19,7 +19,7 @@ The aws cluster environment and accompanying documentation can be found in the f
 
 The libvirt/kvm environnent and accompanying documentation can be found in the following directory: **dev-cluster/local**
 
-## Test Ansible Roles
+## Ansible Roles
 
 Most of the roles in this project are part of a kubernetes setup and are best used as part of the kubernetes playbook.
 
@@ -43,7 +43,7 @@ From the top-level directory, type:
 ansible-playbook test-playbooks/install_python_packages.yml --private-key=dev-server/key -u admin -i dev-server/inventory
 ```
 
-## Test Ansible Playbooks
+## Ansible Playbooks
 
 ### k8 cluster (single master)
 
@@ -117,4 +117,32 @@ Type:
 
 ```
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbooks/k8_base_image.yml --private-key=<Your ssh key> -u <The vm's sudo user> -i <The vm's inventory>
+```
+
+## Docker Image
+
+The ansible scripts are also available as a Docker image for greater convenience.
+
+The image is: **magnitus/setup-scripts:latest**
+
+The entrypoint of the image is a Python script that will launch an ansible playbook.
+
+The script is composable with the following parameters:
+
+- ANSIBLE_SSH_KEY: ssh key to use to connect to the target machines. The value is expected to be a file that is located in the **/opt/keys** directory of the container. Defaults to **key**.
+- ANSIBLE_USER: User that ansible will ssh as on the target machines. Defaults to **root**.
+- ANSIBLE_INVENTORY: Inventory file to use to run the playbook on. The value is expected to be a file that is located in the **/opt/inventories** directory of the container. Defaults to **inventory**.
+- ANSIBLE_PLAYBOOK: Playbook to run. The value is expected to be the base filename (without the **.yml** suffix) of the playbook. Defaults to **k8_cluster_ha**.
+
+Example running the image against the aws test environment from the root directory of the project:
+
+```
+docker run --rm \
+           -e "ANSIBLE_SSH_KEY=key" \
+           -e "ANSIBLE_USER=admin" \
+           -e "ANSIBLE_PLAYBOOK=k8_cluster_ha" \
+           -e "ANSIBLE_INVENTORY=inventory" \
+           -v $(pwd)/dev-cluster/aws/inventory:/opt/inventories/inventory \
+           -v $(pwd)/dev-cluster/aws/key:/opt/keys/key \
+           magnitus/setup-scripts:latest
 ```

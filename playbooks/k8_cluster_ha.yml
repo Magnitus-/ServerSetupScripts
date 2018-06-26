@@ -1,5 +1,4 @@
 ---
-
 - name: Set hosts facts
   hosts: all
   roles:
