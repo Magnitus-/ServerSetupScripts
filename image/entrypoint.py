@@ -36,8 +36,9 @@ if __name__ == "__main__":
     )
 
     variable_manager = VariableManager(loader=loader, inventory=inventory)
-   
-    options = Options(os.environ['ANSIBLE_USER'], '/opt/keys/{key}'.format(key=os.environ['ANSIBLE_SSH_KEY']))
+    
+    ssh_key = '/opt/keys/{key}'.format(key=os.environ['ANSIBLE_SSH_KEY']) if os.environ.get('ANSIBLE_SSH_KEY') is not None and os.environ.get('ANSIBLE_SSH_KEY') != "" else None
+    options = Options(os.environ['ANSIBLE_USER'], ssh_key)
 
     executor = playbook_executor.PlaybookExecutor(
         playbooks=['/opt/playbooks/{playbook}.yml'.format(playbook=os.environ['ANSIBLE_PLAYBOOK'])], 

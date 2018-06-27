@@ -129,7 +129,7 @@ The entrypoint of the image is a Python script that will launch an ansible playb
 
 The script is composable with the following parameters:
 
-- ANSIBLE_SSH_KEY: ssh key to use to connect to the target machines. The value is expected to be a file that is located in the **/opt/keys** directory of the container. Defaults to **key**.
+- ANSIBLE_SSH_KEY: ssh key to use to connect to the target machines. The value is expected to be a file that is located in the **/opt/keys** directory of the container. Can be not defined or an empty string in which case no key is passed (which may be ok if for example you have an ssh password defined in the inventory). Defaults to not defined.
 - ANSIBLE_USER: User that ansible will ssh as on the target machines. Defaults to **root**.
 - ANSIBLE_INVENTORY: Inventory file to use to run the playbook on. The value is expected to be a file that is located in the **/opt/inventories** directory of the container. Defaults to **inventory**.
 - ANSIBLE_PLAYBOOK: Playbook to run. The value is expected to be the base filename (without the **.yml** suffix) of the playbook. Defaults to **k8_cluster_ha**.

@@ -1,9 +1,8 @@
 FROM python:3.6.5-slim-stretch
 
-RUN apt-get update && apt-get install -y openssh-client
+RUN apt-get update && apt-get install -y openssh-client sshpass
 RUN pip install ansible
 
-ENV ANSIBLE_SSH_KEY='key'
 ENV ANSIBLE_USER='root'
 ENV ANSIBLE_INVENTORY='inventory'
 ENV ANSIBLE_PLAYBOOK='k8_cluster_ha'
