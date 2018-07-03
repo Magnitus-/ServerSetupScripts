@@ -1,0 +1,3 @@
+- name: Stop etcd if it is running
+  script: shutdown_etcd.sh
+  become: yes

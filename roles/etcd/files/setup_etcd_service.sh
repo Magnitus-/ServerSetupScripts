@@ -22,9 +22,9 @@ if [ -z "$ETCD_CONTAINER" ]; then
     done
 
     if [ "$ARCHITECTURE" = "amd64" ]; then
-        IMAGE=quay.io/coreos/etcd:v3.1.14
+        IMAGE=quay.io/coreos/etcd:v${ETCD_VERSION}
     else
-        IMAGE=quay.io/coreos/etcd:v3.1.14-arm64
+        IMAGE=quay.io/coreos/etcd:v${ETCD_VERSION}-arm64
     fi
 
 CMD="etcd \

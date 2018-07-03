@@ -1,0 +1,44 @@
+---
+- name: Set hosts facts
+  hosts: all
+  roles:
+  - { role: ../roles/set_host_facts, become: true }
+
+- name: Set api_url to load balancer ip if not defined
+  hosts: masters
+  tasks:
+  - set_fact: 
+      api_url: "{{ hostvars[groups['load_balancers'][0]].peer_ip }}"
+    when: api_url is undefined
+
+- name: Prepare inventory list for masters
+  hosts: masters
+  tasks:
+  - set_fact: 
+      inventory_hostnames: "{{ groups['masters'] | join(' ') }}"
+
+- name: Prepare peer inventory list for masters
+  hosts: masters
+  tasks:
+  - set_fact: 
+      peer_inventory_hostnames: "{{ groups['masters'] | map('extract', hostvars, 'peer_ip') | list | join(' ') }}"
+
+- name: Upgrade etcd version from 3.1 to 3.2
+  hosts: masters
+  vars:
+    etcd_version: "3.2.23"
+  serial: 1
+  roles:
+  - { role: ../roles/k8-get-etcd-version, become: true }
+  - role: ../roles/k8-shutdown-etcd
+    become: true
+    when: current_etcd_version.stdout.find('3.1') == 0
+  - role: ../roles/etcd
+    become: true
+    when: current_etcd_version.stdout.find('3.1') == 0
+
+- name: Debug
+  hosts: masters
+  tasks:
+  - debug:
+      msg: "{{ current_etcd_version }}"

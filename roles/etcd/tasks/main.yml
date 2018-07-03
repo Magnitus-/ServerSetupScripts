@@ -5,3 +5,4 @@
     PEER_IP: "{{ peer_ip }}"
     INVENTORY: "{{ peer_inventory_hostnames }}"
     ARCHITECTURE: "{{ cpu_architecture }}"
+    ETCD_VERSION: "{{ etcd_version }}"
