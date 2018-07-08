@@ -54,7 +54,7 @@ CMD="etcd \
                    --network=host \
                    --entrypoint="" \
                    -v /var/lib/etcd:/var/lib/etcd \
-                   -v /etc/kubernetes/pki/etcd:/certs \
+                   -v /etc/pki/etcd:/certs \
                    $IMAGE $CMD;
     else
         docker run -d \
@@ -64,7 +64,7 @@ CMD="etcd \
                    --entrypoint="" \
                    -e "ETCD_UNSUPPORTED_ARCH=arm64" \
                    -v /var/lib/etcd:/var/lib/etcd \
-                   -v /etc/kubernetes/pki/etcd:/certs \
+                   -v /etc/pki/etcd:/certs \
                    $IMAGE $CMD;
     fi
 fi

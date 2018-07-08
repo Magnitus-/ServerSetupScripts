@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ ! -d /etc/kubernetes/pki/etcd ]; then
+if [ ! -d /etc/pki/etcd ]; then
     if [ $ARCHITECTURE = "amd64" ]; then
         IMAGE=magnitus/cfssl:latest
     elif [ $ARCHITECTURE = "arm64" ]; then
@@ -10,8 +10,8 @@ if [ ! -d /etc/kubernetes/pki/etcd ]; then
         exit 1;
     fi
 
-    mkdir -p /etc/kubernetes/pki/etcd;
-    cd /etc/kubernetes/pki/etcd;
+    mkdir -p /etc/pki/etcd;
+    cd /etc/pki/etcd;
     
     #Service certificates generation
     cat >ca-config.json <<EOF

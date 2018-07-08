@@ -1,12 +1,12 @@
 - name: Ensure the directory to copy the files to exists
   file:
-    path: /etc/kubernetes/pki/etcd
+    path: /etc/pki/etcd
     state: directory
 
 - name: Copy etcd certificates from master 0 to other masters
   copy:
     src: "{{ item }}"
-    dest: "/etc/kubernetes/pki/etcd/{{ item }}"
+    dest: "/etc/pki/etcd/{{ item }}"
   with_items:
      - ca.pem
      - ca-key.pem
