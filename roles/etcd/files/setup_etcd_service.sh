@@ -21,11 +21,8 @@ if [ -z "$ETCD_CONTAINER" ]; then
         INDEX=$((INDEX+1))
     done
 
-    if [ "$ARCHITECTURE" = "amd64" ]; then
-        IMAGE=quay.io/coreos/etcd:v${ETCD_VERSION}
-    else
-        IMAGE=quay.io/coreos/etcd:v${ETCD_VERSION}-arm64
-    fi
+    kubeadm config images pull;
+    IMAGE=$(kubeadm config images list | grep etcd)
 
 CMD="etcd \
 --name=${NAME}
@@ -46,7 +43,6 @@ CMD="etcd \
 --initial-cluster-token my-etcd-token \
 --initial-cluster-state new"
 
-    #TODO: Add health check
     if [ "$ARCHITECTURE" = "amd64" ]; then
         docker run -d \
                    --name="k8_master_etcd" \
