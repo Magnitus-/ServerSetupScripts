@@ -30,6 +30,7 @@ apiServerExtraArgs:
   apiserver-count: "${INDEX}"
 EOF
 
+    mkdir -p /etc/kubernetes/pki;
     ln -sf /etc/pki/etcd /etc/kubernetes/pki/etcd;
     kubeadm init --config=/opt/config.yaml;
     rm /opt/config.yaml;
