@@ -3,19 +3,19 @@
 - name: Set hosts facts
   hosts: all
   roles:
-  - { role: ../roles/set_host_facts, become: true }
+  - { role: ../roles/kubernetes/set_host_facts, become: true }
 
 - name: Install Master
   hosts: masters
   roles:
   - { role: ../roles/docker, become: true }
-  - { role: ../roles/kubeadm, become: true }
-  - { role: ../roles/k8-master-flannel, become: true }
-  - { role: ../roles/k8-store-join-command, become: true }
+  - { role: ../roles/kubernetes/kubeadm, become: true }
+  - { role: ../roles/kubernetes/masters/single_master_flannel, become: true }
+  - { role: ../roles/kubernetes/masters/store_join_command, become: true }
 
 - name: Install Workers
   hosts: workers
   roles:
   - { role: ../roles/docker, become: true }
-  - { role: ../roles/kubeadm, become: true }
-  - { role: ../roles/k8-join-master, become: true }
+  - { role: ../roles/kubernetes/kubeadm, become: true }
+  - { role: ../roles/kubernetes/workers/join, become: true }

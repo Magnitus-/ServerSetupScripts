@@ -2,7 +2,7 @@
 - name: Set hosts facts
   hosts: all
   roles:
-  - { role: ../roles/set_host_facts, become: true }
+  - { role: ../roles/kubernetes/set_host_facts, become: true }
 
 - name: Set api_url to load balancer ip if not defined
   hosts: masters
@@ -29,11 +29,11 @@
     etcd_version: "3.2.23"
   serial: 1
   roles:
-  - { role: ../roles/k8-get-etcd-version, become: true }
-  - role: ../roles/k8-shutdown-etcd
+  - { role: ../roles/kubernetes/etcd/get_version, become: true }
+  - role: ../roles/kubernetes/etcd/shutdown
     become: true
     when: current_etcd_version.stdout.find('3.1') == 0
-  - role: ../roles/etcd
+  - role: ../roles/kubernetes/etcd/launch
     become: true
     when: current_etcd_version.stdout.find('3.1') == 0
 

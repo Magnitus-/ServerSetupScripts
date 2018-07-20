@@ -2,7 +2,7 @@
 - name: Set hosts facts
   hosts: all
   roles:
-  - { role: ../roles/set_host_facts, become: true }
+  - { role: ../roles/kubernetes/set_host_facts, become: true }
 
 - name: Set api_url to load balancer ip if not defined
   hosts: masters
@@ -29,46 +29,46 @@
     master_hostnames: "{{ groups['masters'] | join(' ') }}"
   roles:
   - { role: ../roles/docker, become: true }
-  - { role: ../roles/k8-masters-load-balancer, become: true }
+  - { role: ../roles/kubernetes/load_balancer, become: true }
 
 - name: Setup Docker and Kubeadm dependencies on k8 machines
   hosts: masters,workers
   roles:
   - { role: ../roles/docker, become: true }
-  - { role: ../roles/kubeadm, become: true }
+  - { role: ../roles/kubernetes/kubeadm, become: true }
 
 - name: Setup etcd credentials on master 0
   hosts: masters[0]
   roles:
-  - { role: ../roles/etcd_certificates, become: true }
-  - { role: ../roles/get_etcd_certificates, become: true }
+  - { role: ../roles/kubernetes/etcd/generate_certificates, become: true }
+  - { role: ../roles/kubernetes/etcd/get_certificates, become: true }
 
 - name: Setup etcd credentials on other masters
   hosts: masters[1:]
   roles:
-  - { role: ../roles/send_etcd_certificates, become: true }
+  - { role: ../roles/kubernetes/etcd/send_certificates, become: true }
 
 - name: Complete etcd setup
   hosts: masters
   roles:
-  - { role: ../roles/etcd_peer_certificates, become: true }
-  - { role: ../roles/etcd, become: true, user: admin }
+  - { role: ../roles/kubernetes/etcd/generate_peer_certificates, become: true }
+  - { role: ../roles/kubernetes/etcd/launch, become: true, user: admin }
 
 - name: Initialize first master, setup workers' network, get certificates and get join command
   hosts: masters[0]
   roles:
-  - { role: ../roles/k8-master-init, become: true }
-  - { role: ../roles/k8-flannel-network, become: true }
-  - { role: ../roles/k8-get-master-certificates, become: true }
-  - { role: ../roles/k8-store-join-command, become: true }
+  - { role: ../roles/kubernetes/masters/init, become: true }
+  - { role: ../roles/kubernetes/masters/flannel_network, become: true }
+  - { role: ../roles/kubernetes/masters/get_certificates, become: true }
+  - { role: ../roles/kubernetes/masters/store_join_command, become: true }
 
 - name: Copy certificates to other masters and initialize them
   hosts: masters[1:]
   roles:
-  - { role: ../roles/k8-send-master-certificates, become: true }
-  - { role: ../roles/k8-master-init, become: true }
+  - { role: ../roles/kubernetes/masters/send_certificates, become: true }
+  - { role: ../roles/kubernetes/masters/init, become: true }
 
 - name: Install Workers
   hosts: workers
   roles:
-  - { role: ../roles/k8-join-master, become: true }
+  - { role: ../roles/kubernetes/workers/join, become: true }

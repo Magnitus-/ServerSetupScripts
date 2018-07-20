@@ -1,7 +1,7 @@
 - name: Get etcd certificates from master 0
   fetch:
     src: "/etc/pki/etcd/{{ item }}"
-    dest: ../roles/send_etcd_certificates/files/
+    dest: ../roles/kubernetes/etcd/send_certificates/files/
     flat: yes
   with_items:
      - ca.pem

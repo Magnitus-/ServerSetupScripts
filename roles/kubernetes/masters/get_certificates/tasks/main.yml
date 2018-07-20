@@ -1,7 +1,7 @@
 - name: Get k8 certificates from master 0
   fetch:
     src: "/etc/kubernetes/pki/{{ item }}"
-    dest: ../roles/k8-send-master-certificates/files/
+    dest: ../roles/kubernetes/masters/send_certificates/files/
     flat: yes
   with_items:
      - ca.crt

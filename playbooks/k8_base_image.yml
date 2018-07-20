@@ -8,4 +8,4 @@
   hosts: all
   roles:
   - { role: ../roles/docker, become: true }
-  - { role: ../roles/kubeadm, become: true }
+  - { role: ../roles/kubernetes/kubeadm, become: true }
