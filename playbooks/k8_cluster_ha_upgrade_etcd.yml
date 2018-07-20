@@ -23,22 +23,14 @@
   - set_fact: 
       peer_inventory_hostnames: "{{ groups['masters'] | map('extract', hostvars, 'peer_ip') | list | join(' ') }}"
 
-- name: Upgrade etcd version from 3.1 to 3.2
+- name: Reboot etcd with the right version if it doesn't match the kubeadm version
   hosts: masters
-  vars:
-    etcd_version: "3.2.23"
   serial: 1
   roles:
-  - { role: ../roles/kubernetes/etcd/get_version, become: true }
+  - { role: ../roles/kubernetes/etcd/matches_kubeadm_version, become: true }
   - role: ../roles/kubernetes/etcd/shutdown
     become: true
-    when: current_etcd_version.stdout.find('3.1') == 0
+    when: etcd_matches_kubeadm_version.stdout == "no"
   - role: ../roles/kubernetes/etcd/launch
     become: true
-    when: current_etcd_version.stdout.find('3.1') == 0
-
-- name: Debug
-  hosts: masters
-  tasks:
-  - debug:
-      msg: "{{ current_etcd_version }}"
+    when: etcd_matches_kubeadm_version.stdout == "no"

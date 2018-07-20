@@ -1,4 +1,0 @@
-- name: Get etcd version
-  script: get_etcd_version.sh
-  become: yes
-  register: current_etcd_version
