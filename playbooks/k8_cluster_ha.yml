@@ -49,16 +49,21 @@
   - { role: ../roles/docker, become: true }
   - { role: ../roles/kubernetes/kubeadm, become: true }
 
-- name: Setup etcd credentials on master 0
+- name: Setup etcd credentials on stores 0
   hosts: stores[0]
   roles:
   - { role: ../roles/kubernetes/etcd/generate_certificates, become: true }
   - { role: ../roles/kubernetes/etcd/get_certificates, become: true }
 
-- name: Setup etcd credentials on other masters
+- name: Copy etcd credentials on other stores
   hosts: stores[1:]
   roles:
   - { role: ../roles/kubernetes/etcd/send_certificates, become: true }
+
+- name: Copy etcd client credentials to masters
+  hosts: masters
+  roles:
+  - { role: ../roles/kubernetes/etcd/send_certificates, become: true, client_only: true }
 
 - name: Complete etcd setup
   hosts: stores

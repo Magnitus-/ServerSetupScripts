@@ -98,15 +98,24 @@ resource "aws_instance" "test_load_balancers" {
   count           = "${var.masters_count > 1 ? 1 : 0}"
 }
 
+resource "aws_instance" "test_stores" {
+  ami             = "${data.aws_ami.debian.id}"
+  instance_type   = "t2.small"
+  key_name        = "test-cluster-key"
+  security_groups = ["${aws_security_group.test_cluster_ssh.name}", "${aws_security_group.test_cluster_outbound.name}", "${aws_security_group.test_cluster_internal.name}"]
+  count           = "${var.stores_count}"
+}
+
 resource "null_resource" "inventory" {
   triggers {
-    test_worker_id = "${join(",", aws_instance.test_workers.*.id)}"
-    test_master_id = "${join(",", aws_instance.test_masters.*.id)}"
-    test_consul_id = "${join(",", aws_instance.test_load_balancers.*.id)}"
+    test_worker_id        = "${join(",", aws_instance.test_workers.*.id)}"
+    test_master_id        = "${join(",", aws_instance.test_masters.*.id)}"
+    test_load_balancer_id = "${join(",", aws_instance.test_load_balancers.*.id)}"
+    test_store_id         = "${join(",", aws_instance.test_stores.*.id)}"
   }
 
   provisioner "local-exec" {
-    command = "echo '[stores]\n${join("\n", formatlist("%s internal_ip=%s", aws_instance.test_masters.*.public_ip, aws_instance.test_masters.*.private_ip))}\n' > inventory"
+    command = "echo '[stores]\n${var.stores_count > 0 ? join("\n", formatlist("%s internal_ip=%s", aws_instance.test_stores.*.public_ip, aws_instance.test_stores.*.private_ip)) : join("\n", formatlist("%s internal_ip=%s", aws_instance.test_masters.*.public_ip, aws_instance.test_masters.*.private_ip))}\n' > inventory"
   }
 
   provisioner "local-exec" {

@@ -20,18 +20,18 @@ You can tear down the above environment when done by typing:
 terraform destroy
 ```
 
-Alternatively, you can spin up a custom number of master and worker nodes by overwriting the **workers_count** and **masters_count** variables prior to creating the environment. You can modify their value in the **variables.tf** file, but it maybe more straightforward to overwrite their value when calling **terraform apply**.
+Alternatively, you can spin up a custom number of master and worker nodes by overwriting the **workers_count** and **masters_count** variables prior to creating the environment. If you want the etcd stores to be on separate machines from the masters, you can also set **stores_count** to a non-zero value. You can modify their value in the **variables.tf** file, but it maybe more straightforward to overwrite their value when calling **terraform apply**.
 
-For example, the following call will spin up 3 masters, 3 workers and a load balancer:
+For example, the following call will spin up 3 masters, 3 workers, 3 standalone stores and a load balancer:
 
 ```
-terraform apply -var 'workers_count=3' -var 'masters_count=3'
+terraform apply -var 'workers_count=3' -var 'masters_count=3' -var 'stores_count=3'
 ```
 
 Once you would be done with the above, you would tear down the machines by typing:
 
 ```
-terraform destroy -var 'workers_count=3' -var 'masters_count=3'
+terraform destroy -var 'workers_count=3' -var 'masters_count=3' -var 'stores_count=3'
 ```
 
 # Artifacts

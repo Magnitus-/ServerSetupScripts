@@ -3,7 +3,7 @@
     path: /etc/pki/etcd
     state: directory
 
-- name: Copy etcd certificates from master 0 to other masters
+- name: Copy all etcd certificates to targets
   copy:
     src: "{{ item }}"
     dest: "/etc/pki/etcd/{{ item }}"
@@ -13,3 +13,15 @@
      - client.pem
      - client-key.pem
      - ca-config.json
+  when: not client_only
+
+- name: Copy client etcd certificates to targets
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/pki/etcd/{{ item }}"
+  with_items:
+     - ca.pem
+     - client.pem
+     - client-key.pem
+     - ca-config.json
+  when: client_only
