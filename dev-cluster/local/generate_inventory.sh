@@ -20,6 +20,13 @@ echo "ansible_ssh_user=debian" >> $(pwd)/inventory;
 echo "ansible_ssh_pass=i_am_a_strong_password_i_think" >> $(pwd)/inventory;
 
 echo "" >> $(pwd)/inventory;
+echo "[stores]" >> $(pwd)/inventory;
+
+for VM in $(echo "master0 master1 master2"); do
+    write_vm $VM
+done
+
+echo "" >> $(pwd)/inventory;
 echo "[masters]" >> $(pwd)/inventory;
 
 for VM in $(echo "master0 master1 master2"); do

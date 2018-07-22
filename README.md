@@ -91,7 +91,7 @@ Some customizations are possible by passing the following variables to the playb
 Additionally, the following variable can be set on hosts in the inventory:
 - internal_ip: Specifies an ip for the machine that should be used when connecting to other machines in the k8 cluster. Defaults to the inventory hostname of the machine.
 
-#### Note
+#### Note About Load Balancer
 
 The playbook will, optionally, provision a load balancer, although it does not (yet) provide a high availability solution for the load balancing.
 
@@ -104,6 +104,10 @@ A high availability solution may be obtained by leaving the **load_balancers** i
 While I could have provided a direct integration with an aws load balancer in the terraformed test environments, I opted to use a less scalable single haproxy setup even for the tests as I really want this playbook to be able to provide a working environment that is cloud agnostic (otherwise, I'd simply be using Kops and not be bothering with this project).
 
 I will later investigate a consul integration within the playbook to achieve true high availability with no extra steps (at least for internal use within the k8 cluster, some extra steps will realistically be needed to access the master API from the outside).
+
+#### Note About Stores
+
+The playbook requires separate group entries in your inventory for **masters** and **stores**. If you don't want your masters machines to be separate from the etcd stores, you can simply define the same set in machines in both groups.
 
 ### k8 Base Image
 

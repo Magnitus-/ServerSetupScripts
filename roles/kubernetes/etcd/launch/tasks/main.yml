@@ -3,6 +3,6 @@
   become: yes
   environment:
     PEER_IP: "{{ peer_ip }}"
-    INVENTORY: "{{ peer_inventory_hostnames }}"
+    INVENTORY: "{{ stores_peer_inventory_hostnames }}"
     ARCHITECTURE: "{{ cpu_architecture }}"
     ETCD_VERSION: "{{ etcd_version }}"

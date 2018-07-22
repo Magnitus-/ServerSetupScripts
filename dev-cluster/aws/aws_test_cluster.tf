@@ -106,7 +106,11 @@ resource "null_resource" "inventory" {
   }
 
   provisioner "local-exec" {
-    command = "echo '[masters]\n${join("\n", formatlist("%s internal_ip=%s", aws_instance.test_masters.*.public_ip, aws_instance.test_masters.*.private_ip))}\n' > inventory"
+    command = "echo '[stores]\n${join("\n", formatlist("%s internal_ip=%s", aws_instance.test_masters.*.public_ip, aws_instance.test_masters.*.private_ip))}\n' > inventory"
+  }
+
+  provisioner "local-exec" {
+    command = "echo '[masters]\n${join("\n", formatlist("%s internal_ip=%s", aws_instance.test_masters.*.public_ip, aws_instance.test_masters.*.private_ip))}\n' >> inventory"
   }
 
   provisioner "local-exec" {

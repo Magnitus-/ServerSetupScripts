@@ -5,5 +5,5 @@
     POD_NETWORK_CIDR: "{{ pod_network_cidr }}"
     KUBERNETES_ADMIN: "{{ kubernetes_admin }}"
     PEER_IP: "{{ peer_ip }}"
-    INVENTORY: "{{ peer_inventory_hostnames }}"
+    INVENTORY: "{{ stores_peer_inventory_hostnames }}"
     API_URL: "{{ peer_ip if not api_url else api_url }}"
