@@ -3,20 +3,17 @@
 if [ ! -f /etc/kubernetes/admin.conf ]; then
 
     INITIAL_CLUSTER=""
-    INDEX=$((0))
-
     for ELEMENT in $INVENTORY
     do
         INITIAL_CLUSTER="${INITIAL_CLUSTER}
   - https://${ELEMENT}:2379"
-        INDEX=$((INDEX+1))
     done
 
 cat >/opt/config.yaml <<EOF
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 api:
-  advertiseAddress: ${API_URL}
+  controlPlaneEndpoint: ${API_URL}
 etcd:
   endpoints:${INITIAL_CLUSTER}
   caFile: /etc/kubernetes/pki/etcd/ca.pem
@@ -26,8 +23,6 @@ networking:
   podSubnet: ${POD_NETWORK_CIDR}
 apiServerCertSANs:
 - ${API_URL}
-apiServerExtraArgs:
-  apiserver-count: "${INDEX}"
 EOF
 
     mkdir -p /etc/kubernetes/pki;
