@@ -109,6 +109,15 @@ I will later investigate a consul integration within the playbook to achieve tru
 
 The playbook requires separate group entries in your inventory for **masters** and **stores**. If you don't want your masters machines to be separate from the etcd stores, you can simply define the same set in machines in both groups.
 
+#### Note About Inventory Changes
+
+Currently, only the following inventory changes are supported for an existing kubernetes cluster:
+
+- Adding more workers
+- Adding more masters (provided the first master in the list is a pre-existing master)
+
+The above changes can be applied to a running cluster simply by modifying the inventory and running the playbook again.
+
 ### k8 Base Image
 
 This playbook provisions the **Docker** and **Kubeadm** kubernetes dependencies to all the machines in the inventory.
