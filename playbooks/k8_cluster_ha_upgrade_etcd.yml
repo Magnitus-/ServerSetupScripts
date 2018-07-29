@@ -30,7 +30,7 @@
   - { role: ../roles/kubernetes/etcd/matches_kubeadm_version, become: true }
   - role: ../roles/kubernetes/etcd/shutdown
     become: true
-    when: etcd_matches_kubeadm_version.stdout == "no"
+    when: etcd_matches_kubeadm_version.stdout.find('no') != -1
   - role: ../roles/kubernetes/etcd/launch
     become: true
-    when: etcd_matches_kubeadm_version.stdout == "no"
+    when: etcd_matches_kubeadm_version.stdout.find('no') != -1

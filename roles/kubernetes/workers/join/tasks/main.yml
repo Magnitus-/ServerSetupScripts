@@ -1,3 +1,9 @@
+- name: Ascertain if worker has already joined a cluster
+  script: has_joined_a_cluster.sh
+  become: yes
+  register: has_joined_a_cluster
+
 - name: Apply join command to join master
   command: "{{ hostvars[groups['masters'][0]]['join_command']['stdout'] }}"
   become: yes
+  when: has_joined_a_cluster.stdout.find('no') != -1

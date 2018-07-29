@@ -1,4 +1,4 @@
-- name: Get etcd certificates from master 0
+- name: Get etcd certificates from store 0
   fetch:
     src: "/etc/pki/etcd/{{ item }}"
     dest: ../roles/kubernetes/etcd/send_certificates/files/
