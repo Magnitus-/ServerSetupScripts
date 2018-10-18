@@ -1,0 +1,23 @@
+---
+- name: Ensure the configuration directory exists
+  file:
+    path: "{{ host_config_directory }}"
+    state: directory
+    mode: 0755
+
+- name: Populate and transfer the configuration template
+  template:
+    src: chrony.conf.j2
+    dest: "{{ host_config_directory }}/chrony.conf"
+    mode: 0644
+
+- name: Launch the Chrony container
+  docker_container:
+    name: ntp-client
+    image: magnitus/chrony:latest
+    capabilities:
+      - sys_time
+    network_mode: host
+    restart_policy: always
+    volumes:
+      - "{{ host_config_directory }}/chrony.conf:/etc/chrony.conf"

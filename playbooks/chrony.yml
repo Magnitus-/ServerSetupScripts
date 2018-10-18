@@ -1,0 +1,21 @@
+- name: Setup Docker and pre-requisite Python packages on all hosts
+  hosts: all
+  roles:
+  - { role: ../roles/docker, become: true }
+  - { role: ../roles/python-packages, become: true }
+
+- name: Setup the Chrony server
+  hosts: server
+  roles:
+  - { role: ../roles/chrony/server, become: true }
+
+- name: Set server variable on clients to server ip
+  hosts: clients
+  tasks:
+  - set_fact: 
+      server: "{{ hostvars[groups['master'][0]]['ansible_default_ipv4']['address'] }}"
+
+- name: Setup the Chrony client
+  hosts: clients
+  roles:
+  - { roles: ../roles/chrony/client, become: true }

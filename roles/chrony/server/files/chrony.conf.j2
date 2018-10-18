@@ -1,0 +1,11 @@
+pool {{ remote_pool }} iburst
+driftfile /var/lib/chrony/drift
+makestep 1 3
+rtcsync
+allow {{ allow_subnet }}
+bindaddress {{ bind_address }}
+local
+{% if supports_hardware_timestamping %}
+hwtimestamp *
+{% endif %}
+user www-data

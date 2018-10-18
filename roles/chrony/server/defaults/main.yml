@@ -1,0 +1,6 @@
+---
+remote_pool: "time.nrc.ca"
+allow_subnet: "192.168.0.0/16"
+bind_address: "0.0.0.0"
+supports_hardware_timestamping: true
+host_config_directory: /root/chrony
