@@ -4,4 +4,4 @@
 
 - pip:
     name: docker
-    version: "{{ python_docker_package_version | default('3.2.1') }}"
+    version: "{{ python_docker_package_version | default('3.5.1') }}"
