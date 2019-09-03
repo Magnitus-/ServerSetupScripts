@@ -4,6 +4,12 @@ This is a multi virtual machines cluster environment to run locally, using libvi
 
 Currently, the environment is hardcoded to generate 3 masters, 3 workers and a load balancer.
 
+# Dependencies
+
+You need libvirt and kvm installed (should be able to run the virsh, virt-install and virt-clone commands).
+
+The **install_dependencies_ubuntu_18.04.sh** installs all the requisite dependencies for that version of Ubuntu. Note that you'll have to logout after the installation for the right permissions to take effect.
+
 # Important Note
 
 I couldn't get the kubernetes playbooks to work on the arm64 emulated qemu environment. The underlying cause of the failure is unknown (the k8 api proved to be unstable and kept crashing). It could have been quirks with my installation of qemu or edge cases triggered by hardware emulation or the abysmal performance it caused.
@@ -13,6 +19,8 @@ Ultimately, for arm64, I got the playbooks to work on a Scaleway cluster of arm6
 Furthermore, the more usable amd64 setup with kvm works and has been tested multiple times at this point.
 
 Given that the only reason for the arm64 emulated environment was to test the installation done by the kubernetes playbooks (arm64 emulation performance was too poor for me to consider it usable beyond that use-case), I do not intent to investigate the problem further.
+
+Additional note: Months ago, a cluster of Rasberry Pis running HypriotOS ended up failing with the same failure as the local vms. arm64 compatibility seems to be a case-by-case thing.
 
 # VM Specs
 
