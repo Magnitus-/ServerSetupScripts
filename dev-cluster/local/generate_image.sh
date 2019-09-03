@@ -7,12 +7,12 @@ VM_TEMPLATE=${VM_TEMPLATE:-"k8_vm_template"}
 K8_VM_TEMPLATE=$(virsh list --name --all | grep $VM_TEMPLATE)
 
 if [ "$VM_TEMPLATE" = "k8_vm_template"  ]; then
-    VM_IMAGE_LOCATION=http://ftp.us.debian.org/debian/dists/stable/main/installer-amd64/
+    VM_IMAGE_LOCATION=http://ftp.us.debian.org/debian/dists/stretch/main/installer-amd64/
     VM_CPU=host-passthrough,cache.mode=passthrough
     VM_VIRT_TYPE=kvm
     VM_ARCHITECTURE=x86_64
 else
-    VM_IMAGE_LOCATION=http://ftp.us.debian.org/debian/dists/stable/main/installer-arm64/
+    VM_IMAGE_LOCATION=http://ftp.us.debian.org/debian/dists/stretch/main/installer-arm64/
     VM_CPU=cortex-a57
     VM_VIRT_TYPE=qemu
     VM_ARCHITECTURE=aarch64
