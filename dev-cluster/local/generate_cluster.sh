@@ -10,7 +10,7 @@ MASTER0=$(virsh list --name --all | grep master0)
 if [ -z "$MASTER0" ]; then
 
     for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
-        virt-clone --original=${VM_TEMPLATE} --name=${VM} --file=$(pwd)/disks/${VM}.img;
+        virt-clone --original=${VM_TEMPLATE} --name=${VM} --file=$(pwd)/disks/${VM}.qcow2;
 
         if [[ "$VM" =~ "master" ]]; then
             RAM=$MASTER_RAM
@@ -26,7 +26,7 @@ if [ -z "$MASTER0" ]; then
 
     ./start_cluster.sh;
     ./generate_inventory.sh;
-    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook set_hosts.yml -i inventory;
+    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook set_hosts.yml -i inventory --key-file "./id_rsa";
     ./shutdown_cluster.sh;
     ./start_cluster.sh;
     ./fixate_cluster_ips.sh;

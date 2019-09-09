@@ -1,0 +1,13 @@
+#cloud-config
+users:
+  - default
+  - name: admin
+    gecos: Administrator
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    primary_group: admin
+    groups: users
+    shell: /bin/bash
+    lock_passwd: true
+    ssh_authorized_keys:
+      - {{ssh_pub_key}}
+

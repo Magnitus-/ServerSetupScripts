@@ -16,8 +16,7 @@ touch $(pwd)/inventory;
 
 echo "[all:vars]" >> $(pwd)/inventory;
 echo "ansible_connection=ssh" >> $(pwd)/inventory;
-echo "ansible_ssh_user=debian" >> $(pwd)/inventory;
-echo "ansible_ssh_pass=i_am_a_strong_password_i_think" >> $(pwd)/inventory;
+echo "ansible_ssh_user=admin" >> $(pwd)/inventory;
 
 echo "" >> $(pwd)/inventory;
 echo "[stores]" >> $(pwd)/inventory;
