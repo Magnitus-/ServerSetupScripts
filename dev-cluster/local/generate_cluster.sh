@@ -1,33 +1,30 @@
 #!/usr/bin/env bash
 
-WORKER_RAM=${WORKER_RAM:-4G}
-MASTER_RAM=${MASTER_RAM:-2G}
-LBL_RAM=${LBL_RAM:-1G}
-VM_TEMPLATE=${VM_TEMPLATE:-"k8_vm_template"}
+source ./vars.sh;
 
-MASTER0=$(virsh list --name --all | grep master0)
+WORKER_RAM=${WORKER_RAM:-4096}
+WORKER_DISK_SIZE=${WORKER_DISK_SIZE:-8G}
+MASTER_RAM=${MASTER_RAM:-2048}
+MASTER_DISK_SIZE=${MASTER_DISK_SIZE:-4G}
+LBL_RAM=${LBL_RAM:-1024}
+LBL_DISK_SIZE=${LBL_DISK_SIZE:-4G}
 
-if [ -z "$MASTER0" ]; then
+for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
+    if [[ "$VM" =~ "master" ]]; then
+        RAM=$MASTER_RAM;
+        DISK_SIZE=$MASTER_DISK_SIZE;
+    elif [[ "$VM" =~ "worker" ]]; then
+        RAM=$WORKER_RAM;
+        DISK_SIZE=$WORKER_DISK_SIZE;
+    else
+        RAM=$LBL_RAM;
+        DISK_SIZE=$LBL_DISK_SIZE;
+    fi
+    DISK_SIZE=$DISK_SIZE RAM=$RAM VM_NAME=$VM ./generate_domain.sh;
+done
 
-    for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
-        virt-clone --original=${VM_TEMPLATE} --name=${VM} --file=$(pwd)/disks/${VM}.qcow2;
-
-        if [[ "$VM" =~ "master" ]]; then
-            RAM=$MASTER_RAM
-        elif [[ "$VM" =~ "worker" ]]; then
-            RAM=$WORKER_RAM
-        else
-            RAM=$LBL_RAM
-        fi
-
-        virsh setmaxmem $VM $RAM --config
-        virsh setmem $VM $RAM --config
-    done
-
-    ./start_cluster.sh;
-    ./generate_inventory.sh;
-    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook set_hosts.yml -i inventory --key-file "./id_rsa";
-    ./shutdown_cluster.sh;
-    ./start_cluster.sh;
-    ./fixate_cluster_ips.sh;
-fi
+./generate_inventory.sh;
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook set_hosts.yml -i inventory --key-file "./id_rsa";
+./shutdown_cluster.sh;
+./start_cluster.sh;
+./fixate_cluster_ips.sh;
