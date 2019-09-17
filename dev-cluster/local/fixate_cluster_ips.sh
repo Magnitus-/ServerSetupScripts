@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
+source ./vars.sh;
 source utils.sh;
 
-for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
+for VM in $VMS; do
     VM_IP=$(get_domain_ip $VM)
     VM_MAC=$(get_domain_mac $VM)
 

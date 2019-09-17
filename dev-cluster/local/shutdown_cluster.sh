@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+source ./vars.sh;
 
-for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
+for VM in $VMS; do
     virsh shutdown $VM;
 done
 
-for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
+for VM in $VMS; do
     VM_UP=$(virsh list | grep $VM)
     while [ ! -z "$VM_UP" ]; do
         VM_UP=$(virsh list | grep $VM)

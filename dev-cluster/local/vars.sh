@@ -1,3 +1,4 @@
+export VMS=$(echo "master0 master1 master2 worker0 worker1 worker2 lbl0 ")
 export NETWORK_NAME=k8-host;
 export CPU_ARCHITECTURE=${CPU_ARCHITECTURE:-"adm64"}
 export OS_VARIANT=ubuntu18.04

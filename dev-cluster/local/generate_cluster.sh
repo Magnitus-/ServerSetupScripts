@@ -6,10 +6,10 @@ WORKER_RAM=${WORKER_RAM:-4096}
 WORKER_DISK_SIZE=${WORKER_DISK_SIZE:-8G}
 MASTER_RAM=${MASTER_RAM:-2048}
 MASTER_DISK_SIZE=${MASTER_DISK_SIZE:-4G}
-LBL_RAM=${LBL_RAM:-1024}
+LBL_RAM=${LBL_RAM:-2048}
 LBL_DISK_SIZE=${LBL_DISK_SIZE:-4G}
 
-for VM in $(echo "master0 master1 master2 worker0 worker1 worker2 lbl0"); do
+for VM in $VMS; do
     if [[ "$VM" =~ "master" ]]; then
         RAM=$MASTER_RAM;
         DISK_SIZE=$MASTER_DISK_SIZE;

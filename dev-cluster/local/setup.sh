@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-./setup_network.sh;
+./network/setup.sh;
 ./generate_domain_base.sh;
 ./generate_cluster.sh;
