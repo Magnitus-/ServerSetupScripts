@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source utils.sh;
+
 DISK_SIZE=${DISK_SIZE:-4G}
 VIRTUAL_CPUS=${VIRTUAL_CPUS:-4}
 RAM=${RAM:-1024}
@@ -46,4 +48,13 @@ while [ -z "$IP_ADDRESS" ]; do
     sleep 2;
     IP_ADDRESS=$(virsh domifaddr $VM_NAME | grep ipv4)
 done
+
+VM_IP=$(get_domain_ip $VM_NAME)
+DONE=$(ssh -i id_rsa -o "StrictHostKeyChecking=no" admin@$VM_IP '( cloud-init status )' | grep done)
+while [ -z "$DONE" ]; do
+    echo "Waiting for $VM_NAME to complete cloud-init setup...";
+    sleep 2;
+    DONE=$(ssh -i id_rsa -o "StrictHostKeyChecking=no" admin@$VM_IP '( cloud-init status )' | grep done)
+done
+
 virsh change-media $VM_NAME  hda --eject --config --live;
