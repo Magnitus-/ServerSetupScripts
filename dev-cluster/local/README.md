@@ -24,17 +24,17 @@ Additional note: Months ago, a cluster of Rasberry Pis running HypriotOS ended u
 
 # VM Specs
 
-By default, the vms run on kvm using the host's cpu architecture (amd64 is assumed). Alternatively, the arm64 cpu architecture can be emulated via qemu. The **VM_TEMPLATE** environment variable controls this (**k8_vm_template** for amd64/kvm, **k8_arm64_vm_template** for arm64/qemu). Note that arm64 cpu emulation on qemu will run considerable slower than amd64 with cpu passthrough on kvm. It's suitable if you just want to test the installer on that architecture (my use case), but not if you intent to do serious work.
+By default, the vms run on kvm using the host's cpu architecture (amd64 is assumed). Alternatively, the arm64 cpu architecture can be emulated via qemu. The **CPU_ARCHITECTURE** environment variable controls this (**adm64** for amd64/kvm, **arm64** for arm64/qemu). Note that arm64 cpu emulation on qemu will run considerable slower than amd64 with cpu passthrough on kvm. It's suitable if you just want to test the installer on that architecture (my use case), but not if you intent to do serious work.
 
 By default, the vms will have 4GB of disk space (a big chunk of which will be used by the OS and k8 dependencies) and 4 vcpus (meaning they can use up to 4 cores as needed).
 
-Additionally, the masters will use 2GB of RAM, the workers will use 4 GB of RAM and the load balancer will use 1 GB of RAM. This is 19GB of RAM in total for the cluster which is probably ok if you have a computer with 64+ GB of RAM, but might be pushing it otherwise.
+Additionally, the masters will use 2GB of RAM, the workers will use 4 GB of RAM and the load balancer will use 2 GB of RAM. This is 20GB of RAM in total for the cluster which is probably ok if you have a computer with 64+ GB of RAM, but might be pushing it otherwise.
 
 Fortunately, all of the above are customizable by setting the following environment variables in your shell prior to running the scripts:
 
 ```
 #Setting vm cpu to emulated arm64
-export VM_TEMPLATE=k8_arm64_vm_template
+export CPU_ARCHITECTURE=arm64
 #Assigning 6 GB for disk space
 export DISK_SIZE=6
 #Letting vms use up to 8 cores as needed
@@ -70,16 +70,10 @@ Run the following to generate the network, template image and cluster:
 
 After having generated your first cluster with **setup.sh**, you can also do the following...
 
-Delete the cluster (the network and template image will remain):
+Delete the cluster:
 
 ```
-./cleanup_cluster.sh
-```
-
-Creater a new cluster (assuming you ran the **setup.sh** script before to generate the network and template image):
-
-```
-./generate_cluster.sh
+./destroy.sh
 ```
 
 Shutdown the machines in the current cluster:
@@ -100,20 +94,4 @@ Each time you create a new cluster, a new **inventory** file will be generated a
 
 # SSH
 
-Currently, you can ssh to your vms using the username **debian** and the password **i_am_a_strong_password_i_think**.
-
-Adding an ssh key and customizable password to the environment is in the plans, but is not the foremost priority given that access to the environment is very restricted beyond your host machine.
-
-# Cleaning Up Everything
-
-There are some scripts to delete the vm cluster of machine, but not to delete the network or template image.
-
-If you really want to cleanup everything (note that if you do, you'll have to run the **setup.sh** script again next time you want to use this environment), type the following:
-
-```
-./cleanup_cluster.sh
-virsh undefine k8_vm_template
-rm -f ./disks/k8_template.img
-virsh net-destroy k8-host
-virsh net-undefine k8-host
-```
+The generated **id_rsa** file is a key you can use to ssh into any of the machines as the user **admin**. That user has root privileges with sudo.
