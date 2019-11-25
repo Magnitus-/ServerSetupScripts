@@ -1,4 +1,0 @@
----
-connection_timeout: 3000
-client_timeout: 3000
-server_timeout: 3000

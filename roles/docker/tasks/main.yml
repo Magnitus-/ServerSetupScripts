@@ -1,6 +1,0 @@
----
-
-- name: Install docker
-  script: install_docker.sh
-
-- shell: gpasswd -a {{ ansible_user_id }} docker

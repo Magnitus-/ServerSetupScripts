@@ -1,6 +1,0 @@
-- name: Generate the peer certificates
-  script: generate.sh
-  become: yes
-  environment:
-    PEER_IP: "{{ peer_ip }}"
-    ARCHITECTURE: "{{ cpu_architecture }}"

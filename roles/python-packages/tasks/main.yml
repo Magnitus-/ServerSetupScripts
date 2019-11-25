@@ -1,7 +1,0 @@
----
-
-- script: install_pip.sh
-
-- pip:
-    name: docker
-    version: "{{ python_docker_package_version | default('3.2.1') }}"

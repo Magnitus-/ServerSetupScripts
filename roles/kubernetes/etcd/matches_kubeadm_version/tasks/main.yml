@@ -1,4 +1,0 @@
-- name: Ascertain if the running version of etcd matches what kubeadm expects
-  script: matches_kubeadm_version.sh
-  become: yes
-  register: etcd_matches_kubeadm_version

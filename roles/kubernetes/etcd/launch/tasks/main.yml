@@ -1,8 +1,0 @@
-- name: Start etcd in a pod running on the host
-  script: setup_etcd_service.sh
-  become: yes
-  environment:
-    PEER_IP: "{{ peer_ip }}"
-    INVENTORY: "{{ stores_peer_inventory_hostnames }}"
-    ARCHITECTURE: "{{ cpu_architecture }}"
-    ETCD_VERSION: "{{ etcd_version }}"

@@ -1,6 +1,0 @@
----
-
-- name: Install Python Packages
-  hosts: test_server
-  roles:
-  - { role: ../roles/python-packages, become: true, user: admin }

@@ -1,3 +1,0 @@
-- name: Install kubeadm
-  script: install_kubeadm.sh
-  become: yes

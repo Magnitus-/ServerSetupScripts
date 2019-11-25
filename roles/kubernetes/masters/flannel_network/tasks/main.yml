@@ -1,7 +1,0 @@
-- name: Setup master with flannel network
-  script: setup.sh
-  become: yes
-  environment:
-    POD_NETWORK_CIDR: "{{ pod_network_cidr }}"
-    ARCHITECTURE: "{{ cpu_architecture }}"
-    KUBERNETES_ADMIN: "{{ kubernetes_admin }}"
